@@ -4,7 +4,7 @@ sidebarTitle: "Avid"
 description: "Generate real Avid .avb bin files with managed and AMA-linked clips, sync map sequences, auto sequences, and full metadata — no Avid app required."
 ---
 
-Cocreate's Avid export is the deepest NLE integration in the application. Rather than generating an interchange format that Avid must interpret, Cocreate writes real `.avb` bin files using the same internal MasterMob/FileMob/TapeMob structures that Media Composer produces itself. The result is a complete, ready-to-open Avid project folder containing your managed transcode bins, AMA-linked bins, per-day sync map sequences, per-roll auto sequences, and fully populated metadata columns — built entirely offline, with no Avid application required on the export machine.
+Cocreate's Avid export is the deepest NLE integration in the application. Rather than generating an interchange format that Avid must interpret, Cocreate writes real `.avb` bin files in the native format that Media Composer reads directly. The result is a complete, ready-to-open Avid project folder containing your managed transcode bins, AMA-linked bins, per-day sync map sequences, per-roll auto sequences, and fully populated metadata columns — built entirely offline, with no Avid application required on the export machine.
 
 <Steps>
   <Step title="Open Organize & Export → Export Bins">
@@ -23,7 +23,7 @@ Cocreate's Avid export is the deepest NLE integration in the application. Rather
     In the export settings panel, set the **Destination** to the folder where Cocreate should write the Avid project directory. If you generated OP-Atom MXF proxies during offload, confirm that the **Avid MediaFiles** path points to the correct `Avid MediaFiles/MXF/<n>` folder on your edit volume. Cocreate uses this path so the managed clips in the bins point to the right location when Avid opens the project.
   </Step>
   <Step title="Click Export">
-    Press **Export**. Cocreate expands all template bins across your media, writes each `.avb` bin file, resolves MasterMob/FileMob links for managed clips, and builds AMA references for the original camera files. A progress indicator tracks each stage; the export log captures a full debug snapshot for troubleshooting.
+    Press **Export**. Cocreate expands all template bins across your media, writes each `.avb` bin file, resolves master clip and file clip links for managed clips, and builds AMA references for the original camera files. A progress indicator tracks each stage.
   </Step>
   <Step title="Open the exported project in Media Composer">
     In Avid Media Composer, press **File → Open Project** and navigate to the exported project folder. Your bins open with clips already linked: managed clips resolve from the `Avid MediaFiles/MXF/` path on the edit volume, and AMA clips link directly to the original camera files on the source drive. Disk Label, TapeID, and any other mapped columns are populated on every clip.

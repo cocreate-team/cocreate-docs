@@ -1,5 +1,5 @@
 ---
-title: "Download and Install Cocreate on Mac or Windows"
+title: "Download and Install Cocreate: macOS, Windows, Linux"
 sidebarTitle: "Installation"
 description: "Install Cocreate on macOS (Apple Silicon) or Windows (x64). Covers system requirements, platform download links, Gatekeeper, and first-launch setup."
 ---
@@ -68,7 +68,7 @@ Download the latest version of Cocreate from [cocreate.so](https://cocreate.so).
 
     1. Double-click the downloaded `.exe` file to launch the NSIS installer.
     2. Follow the on-screen prompts. The default installation path is `C:\Users\<YourName>\AppData\Local\Programs\cocreate`.
-    3. Cocreate launches automatically when the installer finishes.
+    3. When the installer finishes, launch Cocreate from the Start Menu or desktop shortcut.
 
     The installer creates a Start Menu shortcut and a desktop shortcut. You can launch Cocreate from either location on subsequent runs.
 
@@ -126,7 +126,7 @@ Cocreate is a self-contained bundle. The following components are included — y
 | YOLO clapperboard model (ONNX) | Local slate detection |
 | Parakeet TDT ASR (CoreML) | Local/airgapped transcription (macOS only) |
 | raw2bmx, Tesseract, libvips | MXF handling, OCR, and image processing |
-| SQLite | Local project database |
+| Local project database | Stores all project data, analysis results, and settings on your machine |
 
 ## Auto-updates
 
@@ -136,7 +136,7 @@ Cocreate checks for updates automatically in the background. When a new stable r
 2. A notification appears when the download is ready.
 3. Click **Restart and Update** — or wait until your next quit. Cocreate installs the update and relaunches.
 
-Updates are delivered from the GitHub releases channel. Auto-update is disabled in airgapped mode and on beta builds (which have their own separate release channel).
+Auto-update is disabled in airgapped mode and on beta builds (which have their own separate release channel).
 
 <Note>
   The current stable release is **v0.0.119**. Check **Cocreate → About** (macOS) or **Help → About** (Windows/Linux) to confirm which version is installed.

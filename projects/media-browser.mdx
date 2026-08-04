@@ -17,9 +17,9 @@ Use the keyboard shortcuts **⌘1** through **⌘4** to jump between views insta
 | **⌘3** | Scene View | Navigating by day → scene → take; marking circle takes |
 | **⌘4** | Sync Map View | Inspecting audio/video sync alignment across the timeline |
 
-### List View — the FileViewer Spreadsheet
+### List View — Metadata Spreadsheet
 
-List View renders your clips as a virtualized spreadsheet (the **FileViewer**) that handles thousands of rows without slowing down. Every metadata column is editable inline, and the table supports the kind of power-editing you would expect from a professional spreadsheet application:
+List View renders your clips as an editable spreadsheet that handles thousands of rows without slowing down. Every metadata column is editable inline, and the table supports the kind of power-editing you would expect from a professional spreadsheet application:
 
 - **Inline cell editing:** Click any cell and type to edit. Press **Tab** to advance to the next column or **Return** to move down a row.
 - **Autofill drag:** Select a cell and drag the fill handle downward to propagate a value (or a pattern Cocreate detects, such as incrementing take numbers) to the rows below. A preview tooltip shows what each cell will receive before you release.
@@ -36,7 +36,7 @@ List View renders your clips as a virtualized spreadsheet (the **FileViewer**) t
   selected rows simultaneously.
 </Tip>
 
-The FileViewer context menu (right-click any row) provides additional per-clip actions: view the full slate image, apply or clear Cocreate's correction suggestions, reset a field to the AI's original read, rescan the slate, resync the clip, reveal the file in Finder, copy the filename or path, and set a custom thumbnail.
+The List View context menu (right-click any row) provides additional per-clip actions: view the full slate image, apply or clear Cocreate's correction suggestions, reset a field to the AI's original read, rescan the slate, resync the clip, reveal the file in Finder, copy the filename or path, and set a custom thumbnail.
 
 ### Slate View
 
@@ -61,7 +61,7 @@ The filter bar above the clip list lets you narrow what the current view shows:
 
 ## Search
 
-Type in the search field to filter clips by any text that appears in their metadata. Search is debounced (results update 150 ms after you stop typing) and activates after two or more characters. Matches are highlighted inline and a count badge shows how many clips match. For transcript content, click the **Dialogue Search** button in the toolbar — results jump directly into the transcript panel of the player for the matching clip rather than filtering the list.
+Type in the search field to filter clips by any text that appears in their metadata. Results update as you type and are highlighted inline; a count badge shows how many clips match. For transcript content, click the **Dialogue Search** button in the toolbar — results jump directly into the transcript panel of the player for the matching clip rather than filtering the list.
 
 ## Color Labels
 
@@ -79,7 +79,7 @@ For larger shoots, use **Rule-Based Coloring** to apply colors automatically bas
 
 **Tags** are project-level labels you can attach to any clip or group of clips. Each tag has a name and one of 16 palette colors. Assign tags by dragging a tag chip onto clips in the Media tab, or by selecting clips and clicking **Assign Tag** in the toolbar. Tags are searchable, filterable, and available as organizing dimensions in export bin templates.
 
-**Custom fields** let you add your own metadata columns beyond Cocreate's built-in slate fields. Go to **Project → Custom Fields** to define a new column — give it a name, a data type (text, number, date, or dropdown), and optionally a default value. Custom fields appear in the FileViewer alongside built-in columns, are editable with the same bulk-edit and autofill tools, and can be used as filter criteria, organize-drive tags, and export bin organizers.
+**Custom fields** let you add your own metadata columns beyond Cocreate's built-in slate fields. Go to **Project → Custom Fields** to define a new column — give it a name, a data type (text, number, date, or dropdown), and optionally a default value. Custom fields appear in List View alongside built-in columns, are editable with the same bulk-edit and autofill tools, and can be used as filter criteria, Organize Drive tags, and export bin organizers.
 
 ## Playback
 

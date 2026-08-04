@@ -12,7 +12,7 @@ Cocreate uses two phases of sync matching, applied in order:
 
 ### Phase 1: Timecode sync
 
-Timecode sync is the fastest and most reliable method. Cocreate reads timecode from every camera and audio file — from BWF BEXT `time_reference` fields, iXML metadata, and MXF KLV-level timecode blocks — and then, for each shoot day, looks for video/audio pairs whose timecode intervals overlap.
+Timecode sync is the fastest and most reliable method. Cocreate reads timecode from every camera and audio file and looks for video/audio pairs whose timecode intervals overlap within each shoot day.
 
 Matching is fps-aware and handles NTSC fractional frame rates (23.976, 29.97, 59.94) correctly. When multiple audio rolls could match the same camera clip, Cocreate uses a greedy closest-first algorithm that picks the best match by timecode proximity.
 
@@ -22,10 +22,8 @@ Timecode sync is the method used for the vast majority of clips on a properly ja
 
 For clips where timecode doesn't produce a confident match — mismatched frame rates, unjammed sound, rolled-over counters, or timecode that simply wasn't recorded — Cocreate runs waveform sync. This method uses acoustic fingerprinting to find the same sound in two different files:
 
-1. **Spectral-peak fingerprinting** — Cocreate generates a Shazam-style fingerprint from both the camera audio track and the sound roll, grouping clips by their acoustic signature.
-2. **BBC cross-correlation** — Candidate pairs are verified and their precise offset is computed using cross-correlation of the audio waveform, the same method used by the BBC's production tools.
-
-Waveform sync runs in a separate subprocess (isolated from the main process to avoid BLAS library conflicts on Apple Silicon) and produces offsets accurate to the sample level.
+1. **Acoustic fingerprinting** — Cocreate generates an audio fingerprint from both the camera audio track and the sound roll, grouping clips by their acoustic signature.
+2. **Waveform correlation** — Candidate pairs are verified and their precise offset is computed by correlating the audio waveforms, producing offsets accurate to the sample level.
 
 <Note>
   A third phase — **Visual clap sync**, which detects the slate-close frame visually and matches it to the audio transient — is in development and will be available in a future release. This phase will be particularly useful for MOS-adjacent workflows where audio callouts are absent.
@@ -99,7 +97,7 @@ Enable these columns from the column picker (the column icon in the FileViewer h
 
 ## Drift measurement
 
-For long takes, genlock drift between the camera and the sound recorder can cause audio that was in sync at the slate to drift out of sync by the end of the clip. Cocreate measures this drift by running segmented correlation probes across the length of each sync pair and reports:
+For long takes, genlock drift between the camera and the sound recorder can cause audio that was in sync at the slate to drift out of sync by the end of the clip. Cocreate measures this drift across the length of each sync pair and reports:
 
 - **Drift (ms/min)** — the rate of drift in milliseconds per minute of recording
 - A dubious-pair flag if drift exceeds the acceptable threshold for the clip duration

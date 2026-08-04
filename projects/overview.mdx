@@ -25,7 +25,7 @@ From the Home screen you can:
 
 ## Portable `.ccrt` Project Files
 
-Every Cocreate project is stored as a single **`.ccrt` file** — a gzipped JSON document that is the complete source of truth for that project. It contains all analysis state: asset metadata from ffprobe, slate reads and transcription results, audio/video sync pairs, folder structure, tags, custom fields, color labels, comments, and documents. Auto-save writes changes continuously in the background (debounced, with conflict detection), so you rarely need to think about it.
+Every Cocreate project is stored as a single **`.ccrt` file** — a gzipped JSON document that is the complete source of truth for that project. It contains all analysis state: asset metadata, slate reads and transcription results, audio/video sync pairs, folder structure, tags, custom fields, color labels, comments, and documents. Auto-save writes changes continuously in the background, so you rarely need to think about it.
 
 What `.ccrt` files do **not** contain is the media itself. Clips are referenced by file path only, which means:
 
@@ -77,7 +77,7 @@ To start a Roaming Session:
 2. Click **Start Roaming Session** and select the folder to watch.
 3. Leave Cocreate running. Each new batch of files that appears in the folder is ingested and analyzed automatically.
 
-When working without an internet connection, Cocreate detects the airgapped state and disables cloud-dependent processes (transcription, GPT slate reading), falling back to local-only slate scanning so analysis still proceeds.
+When working without an internet connection, Cocreate detects the airgapped state and disables cloud-dependent processes such as transcription and AI-assisted slate reading, falling back to local-only analysis so processing still proceeds.
 
 ---
 

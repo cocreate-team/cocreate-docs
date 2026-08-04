@@ -10,7 +10,7 @@ Importing media into Cocreate is more than a file copy — it is the trigger for
 
 Cocreate ingests a broad range of professional camera and audio formats:
 
-- **Video:** ProRes (all variants), MXF (DNxHD, DNxHR, XAVC), H.264, H.265, ARRIRAW (requires a configured ART-CMD binary), and most formats readable by FFmpeg
+- **Video:** ProRes (all variants), MXF (DNxHD, DNxHR, XAVC), H.264, H.265, ARRIRAW, and most professional camera formats
 - **Audio:** BWF (`.wav`) with embedded iXML and timecode metadata, MXF OP-Atom audio files, and multichannel production sound files from Sound Devices, Zoom, and Zaxcom recorders
 
 <Note>
@@ -55,9 +55,9 @@ Cocreate ingests a broad range of professional camera and audio formats:
 
     | Toggle | What it does |
     |---|---|
-    | **Detect slates** | Runs YOLO clapperboard detection and GPT-4o Vision to read scene, take, roll, camera, and other slate fields from video frames |
-    | **Enable transcription** | Sends audio to Deepgram Nova-3 (or the on-device Parakeet model when airgapped) for word-level transcript generation |
-    | **Sync audio and video** | Matches camera files to audio rolls by timecode, then confirms or refines offsets with waveform fingerprinting |
+    | **Detect slates** | Uses AI clapperboard detection and vision models to read scene, take, roll, camera, and other slate fields from video frames |
+    | **Enable transcription** | Generates a word-level transcript from the audio track — uses cloud transcription when online, or an on-device model when working airgapped |
+    | **Sync audio and video** | Matches camera files to audio rolls by timecode, then confirms or refines offsets with waveform analysis |
     | **Clear existing fields** | Erases previously written metadata fields before this run — use with caution; leave it off when re-running a single pass on already-analyzed clips |
 
     <Tip>
@@ -101,7 +101,7 @@ Cocreate ingests a broad range of professional camera and audio formats:
 You can re-import the same files at any time to run additional passes. For example:
 
 - **Re-run sync only:** Select the clips in the Media tab, right-click, choose **Resync Selected**, or return to Import Media, add the same files, leave only **Sync audio and video** enabled, and click **Process**.
-- **Re-run slate reading:** Use **Rescan Slate** from the right-click context menu in the FileViewer to trigger a fresh slate extraction on individual clips without affecting transcription or sync data.
+- **Re-run slate reading:** Right-click any clip in List View and choose **Rescan Slate** to trigger a fresh slate extraction on individual clips without affecting transcription or sync data.
 - **Deep Slate Scan:** For clips the quick scan missed, enable **Deep Slate Scan** from the context menu. This runs an uncapped full-video sweep rather than the default priority-zone pass.
 
 Because **Clear existing fields** is a deliberate opt-in, re-running a single pass never clobbers data from passes you do not want to repeat.

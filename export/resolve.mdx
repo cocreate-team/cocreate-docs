@@ -4,18 +4,18 @@ sidebarTitle: "DaVinci Resolve"
 description: "Cocreate generates native DaVinci Resolve .drp project files with nested bins, calibrated clip colors, markers, and stringout timelines."
 ---
 
-Cocreate writes DaVinci Resolve project files at the byte level using a dedicated `.drp` format writer. A `.drp` file is a ZIP archive containing Qt-serialized XML and protobuf blobs — the exact binary format Resolve reads natively. Cocreate assembles this archive from scratch, without Resolve running, producing a project file that opens cleanly in DaVinci Resolve 19. The result is a fully structured Media Pool with nested bins, calibrated clip colors, markers, and stringout timelines ready for the colorist or editor the moment they import the project.
+Cocreate writes native DaVinci Resolve `.drp` project files offline, without Resolve running on the export machine. The output is a standard `.drp` file that opens cleanly in DaVinci Resolve 19 — no import conversion or intermediate format required. The result is a fully structured Media Pool with nested bins, calibrated clip colors, markers, and stringout timelines ready for the colorist or editor the moment they import the project.
 
 ## How .drp Export Works
 
-When you press **Export** with the Resolve target selected, Cocreate's `.drp` writer:
+When you press **Export** with the Resolve target selected, Cocreate:
 
-1. Resolves all template bins in the Bin Structure Builder against your project's media, expanding one bin per roll, day, or other organize-by value.
-2. Writes each clip's timecode, frame rate, container metadata, scene, take, and camera fields into the correct Qt-serialized XML structures.
-3. Serializes clip color assignments and markers into protobuf blobs embedded in the archive.
-4. Assembles and ZIPs the complete archive into a single `.drp` file at your chosen export destination.
+1. Expands all template bins in the Bin Structure Builder against your project's media, creating one bin per roll, day, or other organize-by value.
+2. Writes each clip's timecode, frame rate, container metadata, scene, take, and camera fields into the project file.
+3. Embeds clip color assignments and markers in the project.
+4. Saves the complete project as a single `.drp` file at your chosen export destination.
 
-The whole process runs offline — no Resolve process, no scripting API, no need for the application to be installed.
+The whole process runs offline — no Resolve application, no scripting API, and no need for Resolve to be installed on the export machine.
 
 ## Nested Bins in the Media Pool
 

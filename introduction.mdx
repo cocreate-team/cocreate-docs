@@ -27,7 +27,7 @@ Cocreate models the dailies pipeline as a connected sequence of stages, each fee
 
 ## Key differentiators
 
-- **No NLE app required for export.** Cocreate writes native `.avb` Avid bins (via pyavb), `.prproj` Premiere Pro projects (via pypremiere), and `.drp` DaVinci Resolve projects (via a byte-level writer) entirely offline. Open the exported project in your NLE and all clips, bins, sequences, and metadata are already there.
+- **No NLE app required for export.** Cocreate writes native `.avb` Avid bins, `.prproj` Premiere Pro projects, and `.drp` DaVinci Resolve projects entirely offline. Open the exported project in your NLE and all clips, bins, sequences, and metadata are already there.
 - **AI slate detection at every stage.** The YOLO detector + GPT-4o vision pipeline runs a priority-zone scan of each clip's head, then tail, then a sparse full sweep — with a Deep Slate Scan option for clips that the quick pass misses.
 - **Verified offload with production paperwork.** Every transfer produces a checksum-verified receipt with operator initials, work order, barcode, file counts, and expected-roll validation. MHL generation and HTML snapshots are built in.
 - **Portable projects.** `.ccrt` files are gzipped JSON that contain all analysis state and reference media by path. Move them between machines freely and use the built-in relink flow to reconnect media.

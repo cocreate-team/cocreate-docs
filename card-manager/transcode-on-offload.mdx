@@ -15,6 +15,10 @@ When you enable encoding in Card Manager, Cocreate reads each source file once a
 
 Because both operations run in the same pass, there is no additional wall-clock time for the transcode beyond the extra write bandwidth required. If your edit volume is on a fast local SSD, the overall transfer time is usually determined by the source card's read speed rather than the encode.
 
+<Note>
+  If you need to (re)transcode media that is already on nearline — without running another copy — you can enable encoding without adding a nearline destination. Card Manager will read from the source and write only the transcoded output, skipping the verified copy step.
+</Note>
+
 ## Enable encoding in Card Manager
 
 Open the **Encoding** section in the transfer configuration panel and turn on the **Encoding** switch. The encoding fields expand to reveal codec, container, output folder, and frame-rate options.

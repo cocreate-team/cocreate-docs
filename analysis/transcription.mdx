@@ -1,25 +1,25 @@
 ---
-title: "Automatic Dialogue Transcription: Deepgram and On-Device ASR"
+title: "Automatic Dialogue Transcription: Cloud and On-Device ASR"
 sidebarTitle: "Transcription"
-description: "Transcribe dialogue in your camera files and audio rolls using Deepgram Nova-3 in the cloud or the bundled on-device model for airgapped workflows."
+description: "Transcribe dialogue in your camera files and audio rolls using cloud-based Deepgram or the bundled on-device model for fully airgapped workflows."
 ---
 
-Cocreate transcribes every clip's dialogue as part of the standard analysis run, turning hours of production audio into a searchable, per-word timestamped transcript without any extra steps. Transcription serves two purposes in the workflow: it feeds the slate extraction pipeline as a complementary signal (verbal slate callouts are parsed directly from the transcript before any video frame is analyzed), and it produces the Dialogue panel content that lets you locate, review, and search spoken lines inside the player. When you export to Avid or Premiere, those transcripts become clip markers and sequence markers in the NLE — meaning an editor can search dialogue directly inside their project the same way they search in Cocreate. Transcription is available in two modes depending on your network environment: cloud-based Deepgram Nova-3 for standard workflows, and a fully on-device model for shoots that require airgap.
+Cocreate transcribes every clip's dialogue as part of the standard analysis run, turning hours of production audio into a searchable, per-word timestamped transcript without any extra steps. Transcription serves two purposes in the workflow: it feeds the slate extraction pipeline as a complementary signal (verbal slate callouts are parsed directly from the transcript before any video frame is analyzed), and it produces the Dialogue panel content that lets you locate, review, and search spoken lines inside the player. When you export to Avid or Premiere, those transcripts become clip markers and sequence markers in the NLE — meaning an editor can search dialogue directly inside their project the same way they search in Cocreate. Transcription is available in two modes depending on your network environment: cloud-based Deepgram for standard workflows, and a fully on-device model for shoots that require airgap.
 
 ## Choosing a transcription mode
 
 <Tabs>
-  <Tab title="Cloud (Deepgram Nova-3)">
-    ### Cloud transcription with Deepgram Nova-3
+  <Tab title="Cloud (Deepgram)">
+    ### Cloud transcription with Deepgram
 
-    Cloud transcription is the default mode for connected workflows. Cocreate sends audio to Deepgram's Nova-3 model and receives a rich transcript with:
+    Cloud transcription is the default mode for connected workflows. Cocreate sends audio to Deepgram and receives a rich transcript with:
 
     - **Per-word timestamps** — every word is anchored to an exact timecode position in the source file
     - **Per-word confidence scores** — low-confidence words are flagged so you can spot uncertain transcriptions quickly
     - **Multichannel support** — up to 20 discrete audio channels processed in a single pass, with production-sound-aware channel detection that identifies mix channels from Sound Devices, Zoom, and Zaxcom track labels and deduplicates words heard simultaneously across channels
     - **Smart formatting** — punctuation, capitalization, and number formatting applied automatically
 
-    Audio is preprocessed locally before upload: Cocreate extracts a 16 kHz mono mix (or per-channel mixes for multichannel files) and applies silence gating to minimize data transfer. Your original media files are never uploaded to Deepgram — only the prepared audio extract.
+    Audio is preprocessed locally before upload: Cocreate extracts a prepared audio mix and applies silence gating to minimize data transfer. Your original media files are never uploaded to Deepgram — only the prepared audio extract.
 
     #### Enabling cloud transcription
 
@@ -27,25 +27,25 @@ Cocreate transcribes every clip's dialogue as part of the standard analysis run,
 
     #### API key handling
 
-    Your Deepgram and OpenAI API keys are **vended server-side** by Cocreate's backend to authenticated clients. They are never embedded in the application or stored on your machine. This means you don't need to manage API keys yourself — your Cocreate subscription covers the cost and access.
+    Your API keys are **managed server-side** by Cocreate on behalf of authenticated subscribers. They are never embedded in the application or stored on your machine. This means you don't need to manage API keys yourself — your Cocreate subscription covers the cost and access.
   </Tab>
   <Tab title="On-Device / Airgapped">
-    ### On-device transcription with Parakeet TDT
+    ### On-device transcription
 
-    For shoots on secure sets, remote locations without connectivity, or facilities with strict network policies, Cocreate bundles a fully local ASR model: **NVIDIA Parakeet TDT 0.6B v3**, converted to CoreML and driven by a Swift CLI that runs entirely on the **Apple Neural Engine**.
+    For shoots on secure sets, remote locations without connectivity, or facilities with strict network policies, Cocreate bundles a fully local speech recognition model that runs entirely on the **Apple Neural Engine**.
 
     On-device transcription requires no internet connection and produces no outbound network traffic. The model runs directly on your Mac's Neural Engine, delivering fast inference even on long audio rolls.
 
     Key characteristics:
 
     - **No network required** — runs fully offline; no data leaves your machine
-    - **Deepgram-compatible output** — emits the same per-word timestamp and confidence JSON format as the cloud path, so all downstream features (Dialogue panel, marker export, slate extraction from transcript) work identically
+    - **Compatible output** — produces the same per-word timestamp and confidence format as the cloud path, so all downstream features (Dialogue panel, marker export, slate extraction from transcript) work identically
     - **Comparable accuracy** — suitable for production use on clearly recorded production sound
     - **Automatic activation** — when Cocreate detects airgapped mode (no network), on-device transcription activates automatically; no manual switching required
 
     #### Enabling airgapped mode
 
-    Enable airgapped mode in **Settings → General → Airgapped mode**, or start Cocreate without an active internet connection. In airgapped mode, the **Enable transcription** toggle runs Parakeet locally rather than calling Deepgram. See [Airgapped Mode](/account/airgapped-mode) for full setup details.
+    Enable airgapped mode in **Settings → General → Airgapped mode**, or start Cocreate without an active internet connection. In airgapped mode, the **Enable transcription** toggle runs the on-device model locally rather than calling Deepgram. See [Airgapped Mode](/account/airgapped-mode) for full setup details.
 
     <Note>
       On-device transcription is currently optimized for English. Multichannel support is available but limited to stereo mixdowns in the local path.

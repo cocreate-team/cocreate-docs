@@ -1,7 +1,7 @@
 ---
 title: "Automatic Slate Reading and Clapperboard Detection"
 sidebarTitle: "Slate Detection"
-description: "Cocreate detects clapperboards in your footage using YOLO and GPT-4o Vision, extracting scene, take, roll, camera, date, and production tags automatically."
+description: "Cocreate uses AI to detect clapperboards in your footage, extracting scene, take, roll, camera, date, and production tags with per-field confidence scores."
 ---
 
 A slate — the clapperboard filmed at the start (or end) of every take — is the single piece of ground-truth metadata that ties a raw camera file to a specific moment in the script. When Cocreate reads that slate accurately, every downstream step compounds: clips are auto-named with the correct scene and take, multi-camera angles of the same take are grouped together, production sound rolls are matched to the right camera, and Avid or Premiere bins are built with the structure an editor can open and immediately work in. A misread on even one field cascades — a wrong scene number breaks multicam grouping, a wrong roll ID mislabels an entire camera's worth of footage. Cocreate's slate detection pipeline is therefore the highest-leverage stage in the analysis workflow, and it's designed with multiple extraction strategies, confidence scoring, and a corrections pass specifically to minimize the cost of a miss.
@@ -30,34 +30,27 @@ Cocreate uses a multi-strategy pipeline — running extraction methods in order 
 
 ### Step 1: Transcript-first extraction
 
-Before any video frame is analyzed, Cocreate checks the dialogue transcript for verbal slate callouts — the sound assistant announcing "Scene 47 apple, take 3, marker." If the transcript returns a result with confidence ≥ 0.7, Cocreate uses those values and may skip the visual scan entirely. Transcript extraction is fast, cheap, and reliable for clearly announced takes; it runs alongside the audio track analysis at no extra compute cost.
+Before any video frame is analyzed, Cocreate checks the dialogue transcript for verbal slate callouts — the sound assistant announcing "Scene 47 apple, take 3, marker." If the transcript returns a result with sufficient confidence, Cocreate uses those values and may skip the visual scan entirely. Transcript extraction is fast and reliable for clearly announced takes; it runs alongside the audio track analysis at no extra compute cost.
 
-### Step 2: YOLO clapperboard detection
+### Step 2: AI visual slate detection
 
-For clips where the transcript didn't yield high-confidence slate data, Cocreate runs a YOLO object detection model (`clapperboard.onnx`, ONNXRuntime) to find the clapperboard in the video frames. The detector scans frames in a priority-zone order designed to minimize processing time:
+For clips where the transcript didn't yield high-confidence slate data, Cocreate uses a computer vision model to scan the video frames for a clapperboard. The scanner works through the clip systematically — prioritizing the head and tail of the clip where slates typically appear, then sweeping further into the footage if needed. It exits early once a confident detection is confirmed, so most clips complete quickly.
 
-1. **Head scan** — frames 0–10 s at 2 fps (covers ~90% of slates)
-2. **Tail scan** — last 5 s at 2 fps (catches tail slates)
-3. **Extended head** — 10–30 s at 1 fps
-4. **Full sweep** — 30 s onward at 0.5 fps, capped at 120 s
+### Step 3: AI field reading
 
-The scanner exits each phase early once it has found and confirmed a detection, so typical clips complete well within the head scan. Detected frames are spatially and temporally clustered to select the sharpest, most stable view of the board.
-
-### Step 3: GPT-4o Vision OCR
-
-The best crop from the YOLO detection phase is preprocessed (CLAHE contrast enhancement, unsharp masking) and sent to GPT-4o Vision with a structured extraction prompt. GPT-4o returns a JSON object with every slate field plus a per-field confidence score. For tail slates that appear upside down, Cocreate automatically applies a 180° rotation and re-runs the OCR.
+The best detected slate image is processed by an AI vision model that reads every field on the board and returns a structured result with per-field confidence scores. For tail slates that appear upside down, Cocreate automatically applies a 180° rotation and re-reads the fields.
 
 <Note>
-  Cocreate also maintains a fallback path using a local vision model for airgapped deployments where GPT-4o is unavailable. Detection accuracy is slightly reduced in airgapped mode but all field extraction still runs locally on-device.
+  Cocreate also maintains a fallback path using a local vision model for airgapped deployments where cloud AI is unavailable. Detection accuracy is slightly reduced in airgapped mode but all field extraction still runs locally on-device.
 </Note>
 
 ### Step 4: Global corrections pass
 
-After all clips have been processed individually, Cocreate runs a 9-phase corrections engine across the whole project. This pass uses timecode-overlap analysis, statistical outlier detection, cross-clip take-sequence validation, and a final GPT-4o re-read of dubious slates to catch systematic misreads — OCR confusions like `'O'` for `'0'` or `'I'` for `'1'` — and propagate verified values to related clips. The corrections pass runs automatically after analysis completes and again when you trigger **Suggest corrections** from the FileViewer.
+After all clips have been processed individually, Cocreate runs a multi-phase corrections engine across the whole project. This pass uses timecode-overlap analysis, statistical outlier detection, cross-clip take-sequence validation, and AI re-reads of dubious slates to catch systematic misreads — OCR confusions like `'O'` for `'0'` or `'I'` for `'1'` — and propagate verified values to related clips. The corrections pass runs automatically after analysis completes and again when you trigger **Suggest corrections** from the FileViewer.
 
 ## Tail slates
 
-Tail slates (boards filmed at the end of a take, upside down) are handled automatically. The detector scans the clip's tail during the priority-zone sweep, and the 180° rotation retry in the GPT-4o step reads inverted text correctly. The decision path for that asset records that a tail slate was used so you can verify the result if needed.
+Tail slates (boards filmed at the end of a take, upside down) are handled automatically. The scanner checks the clip's tail during its sweep, and the 180° rotation retry ensures inverted text is read correctly. The decision path for that asset records that a tail slate was used so you can verify the result if needed.
 
 ## Reviewing slate results
 
@@ -67,7 +60,7 @@ Switch to **Slate View** (⌘2) to see every clip as a slate thumbnail with its 
 
 - The full-resolution slate crop
 - Per-field values alongside their confidence scores
-- The extraction method used (transcript, YOLO+GPT, or fallback)
+- The extraction method used (transcript or visual AI)
 
 Low-confidence fields appear highlighted in amber.
 
