@@ -1,0 +1,108 @@
+---
+title: "Reorganize Media on Disk with Cocreate Organize Drive"
+sidebarTitle: "Organize Drive"
+description: "Build a custom folder hierarchy in Organize Drive and execute it to copy or move your media into a structured directory tree using metadata tags."
+---
+
+When a shoot wraps, media often lands on nearline in whatever folder structure the card offload created — a flat dump of roll folders, or a date-stamped tree that doesn't match your facility's archiving conventions. Organize Drive solves this by letting you design the exact folder hierarchy you want and then executing it against your analyzed clips, placing every file into the right location based on the metadata Cocreate has already extracted. Whether you are building the classic `01 RUSHES/YYMMDD/roll` nearline structure, separating video and audio into parallel trees, or tagging for a custom post-production folder spec, Organize Drive turns that layout into a repeatable, executable operation.
+
+## What Organize Drive Does
+
+Organize Drive reads the metadata on each clip in your project — roll name, shoot day, scene, camera letter, custom fields, and more — and uses it to construct a destination path for that file. You define the path template visually using a drag-and-drop folder tree, then point Organize Drive at a destination root and execute. Cocreate either **copies** or **moves** each file into the resulting folder structure, and updates the project's internal file references so your media stays online afterward.
+
+## Opening Organize Drive
+
+1. Open your project and navigate to the **Export** sub-tab.
+2. Click **Organize Drive** in the left sidebar of the export panel.
+
+The Organize Drive builder opens in the main panel.
+
+## Building a Folder Hierarchy
+
+The builder displays a tree of folders. Each folder can be either **static** (a fixed name you type in, such as `01 RUSHES`) or **dynamic** (driven by a metadata tag that expands to a different value for each clip).
+
+### Adding folders
+
+- Click **Add Folder** to insert a new folder at the current level.
+- Click **Add Subfolder** on any existing folder to nest a child beneath it.
+- Drag folders to reorder or reparent them within the tree.
+
+### Dynamic organize tags
+
+To make a folder name derive from clip metadata, click the folder and open its **Name** field, then select a tag from the **Insert Tag** menu. Available tags include:
+
+| Tag | Example output |
+|---|---|
+| `{Day}` | `250428` (shoot date, YYMMDD) |
+| `{Scene}` | `042` |
+| `{Camera}` | `A` |
+| `{Roll}` | `001_JRYP_280425_FX9_A_01` |
+| `{Custom: <field name>}` | Any custom metadata column you have defined |
+
+You can combine static text and tags in a single folder name — for example, `DAY_{Day}` produces `DAY_250428` for clips shot on that date.
+
+### Assigning media types to folders
+
+Each folder in the tree can be restricted to a specific media type so that video and audio land in separate branches. Click a folder and set its **Media Type** to **Video**, **Audio**, or **All** (the default). Files that do not match a folder's media type filter are skipped for that branch and may match a sibling or parent folder instead.
+
+### Footage subfolders
+
+Enable the **Footage Subfolder** option on any folder to have Cocreate automatically insert a named subfolder (for example, `FOOTAGE`) directly above the files, keeping individual clips one level deeper than the containing roll or scene folder.
+
+## Choosing Copy or Move
+
+At the top of the Organize Drive panel, select the operation mode:
+
+- **Copy** — duplicates files into the new hierarchy while leaving the originals in place. Use this when building a nearline structure from a working copy and you want to preserve the source.
+- **Move** — relocates files into the new hierarchy and removes them from their original locations. Use this for a final, permanent reorganization when you are certain the source layout is no longer needed.
+
+<Warning>
+  **Move** is a destructive operation. Cocreate updates the project's path
+  references after a successful move, but the original file locations are gone.
+  Verify your folder hierarchy with a preview run before executing a move.
+</Warning>
+
+## Previewing Before Executing
+
+Click **Preview** to generate a dry-run report before any files are touched. The preview lists every file and the exact destination path it would be assigned, highlighting any conflicts (two files resolving to the same path) or unmatched files (clips whose metadata is insufficient to satisfy the template). Resolve conflicts by adjusting your folder tree or correcting the underlying metadata in the FileViewer, then re-run the preview until the report is clean.
+
+## Executing the Reorganization
+
+Once the preview looks correct:
+
+1. Set the **Destination Root** by clicking **Choose Folder** and selecting the top-level directory on your nearline or archive volume.
+2. Click **Execute**.
+3. Cocreate processes the file operations in batches, showing a progress indicator for each file. When execution completes, all project references are updated to the new paths so your clips remain online.
+
+## Saving Presets
+
+If you organize media for the same facility repeatedly, save your folder tree as a named preset so you do not have to rebuild it each time.
+
+1. Build and validate your hierarchy.
+2. Click **Save Preset** and enter a name (for example, `ClearCut Nearline v1`).
+3. On future projects, click **Load Preset** from the preset selector and choose your saved layout.
+
+Presets are stored in Cocreate's application data and are available across all projects on the same machine. You can also export a preset as a `.ccrtp` file to share it with another operator.
+
+## Example: Facility Nearline Structure
+
+The following hierarchy mirrors a typical nearline convention where rushes are sorted by date and roll, with video and audio in separate subfolders:
+
+```
+01 RUSHES/
+  {Day}/
+    {Roll}/
+      FOOTAGE/        (Video only)
+      AUDIO/          (Audio only)
+99 MEDIA DROP/
+  (All, unsorted — catches anything not matched above)
+```
+
+Using the `{Day}` and `{Roll}` dynamic tags, Cocreate expands this template for each clip and places it at:
+
+```
+01 RUSHES/250428/001_JRYP_280425_FX9_A_01/FOOTAGE/clip.mxf
+01 RUSHES/250428/004_JRYP_280425_SOUND_01/AUDIO/roll.wav
+```
+
+This matches the `NL FF JR PUB/01 RUSHES/YYMMDD` nearline structure used in standard facility deliveries, and can be saved as a preset and reused on every project for that client.

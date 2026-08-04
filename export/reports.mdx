@@ -1,0 +1,96 @@
+---
+title: "Generate Production Reports and Receipts from Cocreate"
+sidebarTitle: "Reports"
+description: "Produce PDF, CSV, HTML, and MHL reports from Cocreate — roll reports, media reports, contact sheets, and checksum receipts for facilities and clients."
+---
+
+Every production generates paperwork: ingest logs, sync-QC records, codec summaries, and delivery receipts. Cocreate produces all of these automatically from the data it captures during offload, analysis, and sync — no manual spreadsheet entry required. Reports export as PDF, CSV, or HTML depending on the type, and most are available from **File → Export Reports** in the menu bar or from the Card Manager's **Reports** tab. The sections below cover each report type, what it contains, and where to find it.
+
+## Roll Report (CSV)
+
+The Roll Report is a per-roll summary CSV that replaces the manual ingest log spreadsheet most facilities maintain in Excel. For each camera roll in your project, the report captures:
+
+| Column | Description |
+|---|---|
+| **Roll name** | Camera roll identifier |
+| **Clip count** | Total number of clips on the roll |
+| **Total size** | Combined file size of all clips on the roll |
+| **Total duration** | Aggregate duration in `HH:MM:SS` |
+| **Frame rate** | Source frame rate (e.g., `25`, `23.976`) |
+| **Resolution** | Source resolution (e.g., `1920×1080`, `3840×2160`) |
+| **First clip** | Filename of the first clip on the roll |
+| **Last clip** | Filename of the last clip on the roll |
+| **First TC** | Source timecode of the first frame of the first clip |
+| **Last TC** | Source timecode of the last frame of the last clip |
+
+To export the Roll Report, open your project and select **File → Export Reports** from the macOS menu bar. Set **Output Format** to **CSV** and **Report Type** to **Roll**, choose an output location, and press **Export**.
+
+<Tip>
+  The Roll Report contains the same per-roll fields your facility's ingest log tracks — clip count, size, duration, fps, resolution, and first/last TC — so you can use it as a drop-in replacement for the manual Excel log and distribute it alongside the delivery receipt.
+</Tip>
+
+## Media Report
+
+The Media Report provides per-roll sync and timecode QC data derived from Cocreate's analysis and sync passes. It is the digital equivalent of a sound department's sync log. For each roll, the report records:
+
+- **TC type** — time-of-day (TOD) or record-run timecode.
+- **Sync reference** — which track Cocreate used as the sync anchor (camera or sound).
+- **Sync method** — timecode, waveform, or visual clap.
+- **Audio presence** — whether audio tracks were detected on camera files.
+- **Auxiliary TC** — any auxiliary timecode track found in the audio file (e.g., from a Zaxcom or Sound Devices recorder).
+- **Drift** — measured drift in milliseconds per minute for long sync pairs.
+- **Notes** — any flags or warnings generated during the sync pass.
+
+Access the Media Report from **File → Export Reports**, setting the Report Type to **Media Report**. The report exports as CSV. Review it before delivering the project to catch rolls where sync confidence is low or drift exceeds your facility's threshold.
+
+## Project Report (PDF / CSV)
+
+The Project Report is a full-project summary available in both **PDF** (for client delivery and archiving) and **CSV** (for data processing). It contains selectable summary sections:
+
+- **Summary** — total duration, total size, clip count, shoot-day range.
+- **Clips** — per-clip metadata table.
+- **Reels / Rolls** — roll-level breakdown (mirrors the Roll Report data).
+- **Scenes** — scene-level grouping with clip counts and durations.
+- **Codec / Format breakdown** — count and duration by codec, container, resolution, and frame rate — useful for conform planning and editorial handoff documentation.
+- **Video and audio by day and camera** — duration and clip count cross-tabulated by shoot day and camera letter.
+
+Export the Project Report from **File → Export Reports**. Select PDF or CSV under **Output Format**, then check the sections you want to include before pressing **Export**.
+
+## Contact Sheet (HTML / PDF)
+
+The Contact Sheet generates a visual reference document with clip thumbnails and metadata. Each page of the contact sheet displays a grid of frame grabs alongside clip name, scene, take, camera, roll, and timecode. It is the standard deliverable for DIT-to-colorist or DIT-to-VFX handoffs where a visual clip inventory is required.
+
+Contact sheets are available in both **HTML** (self-contained, offline-browsable) and **PDF** formats. Export from the **Card Manager → Reports** tab or from **File → Export Reports** in a project, depending on whether you need a per-transfer or per-project version. Use the date range, scene, and camera filters to scope the sheet to a single shoot day or camera before exporting.
+
+## Card Manager Receipts
+
+Card Manager generates receipts automatically during and after every verified transfer. These are not end-of-project reports — they are real-time delivery records created at the time of offload.
+
+### Per-transfer TXT logs
+
+Each completed transfer writes a plain-text receipt listing every file that was copied, its checksum, verification result, size, and transfer timestamp. The receipt includes the operator initials, work order, and barcode you entered in the Delivery Info panel. Press **Reports & Receipts** on any completed job card in Card Manager to view and export these logs.
+
+### JSON checksum manifests
+
+Alongside the TXT log, Cocreate writes a machine-readable JSON file containing per-file checksums in the verification method you selected (xxHash, MD5, SHA-256, SHA-512, CRC32, or byte-compare). Use these manifests for automated verification at the facility end or to populate your asset management system.
+
+### HTML directory snapshots
+
+Use **Export HTML Snapshot** in Card Manager's toolbar to generate a self-contained offline HTML file — a searchable, browsable tree of any directory with file counts, sizes, and folder hierarchy. This is the production receipt for the source drive and the nearline copy, replacing a manual Snap2HTML pass. The snapshot opens in any browser with no internet connection required.
+
+### MHL (Media Hash List) files
+
+Enable **Generate MHL** in Verification Settings before starting a transfer to produce an industry-standard MHL file alongside each copy. MHL files are accepted by most archive and QC systems as a formal checksum receipt. They are generated by `backend/utils/reports/mhl_generator.py` and written to the destination folder automatically.
+
+## Accessing Each Report Type
+
+| Report | Location |
+|---|---|
+| Roll Report CSV | **File → Export Reports** → Type: Roll → Format: CSV |
+| Media Report CSV | **File → Export Reports** → Type: Media Report → Format: CSV |
+| Project Report PDF/CSV | **File → Export Reports** → Type: Project Report |
+| Contact Sheet HTML/PDF | **File → Export Reports** or **Card Manager → Reports** |
+| Per-transfer TXT logs | **Card Manager** → completed job card → **Reports & Receipts** |
+| JSON checksum manifests | Written automatically to the transfer destination |
+| HTML directory snapshots | **Card Manager** → toolbar → **Export HTML Snapshot** |
+| MHL files | Enable in **Card Manager → Verification Settings** before transfer |

@@ -1,0 +1,143 @@
+---
+title: "Download and Install Cocreate on Mac or Windows"
+sidebarTitle: "Installation"
+description: "Install Cocreate on macOS (Apple Silicon) or Windows (x64). Covers system requirements, platform download links, Gatekeeper, and first-launch setup."
+---
+
+Cocreate is a self-contained desktop application — it bundles its own FFmpeg binaries, Python 3.12 runtime, AI models (including the YOLO clapperboard detector and the CoreML Parakeet ASR model for airgapped transcription), and all native media-engine libraries. You do not need to install Python, FFmpeg, or any NLE application before or after installing Cocreate. Download the installer for your platform, run it once, and Cocreate is ready to use.
+
+## System requirements
+
+| Platform | Requirement |
+|---|---|
+| **macOS** | macOS 12 Monterey or later; Apple Silicon (arm64) required |
+| **Windows** | Windows 10 or Windows 11; x64 processor required |
+| **Linux** | x64 processor; glibc 2.31 or later (Ubuntu 20.04+, Debian 11+) |
+
+<Note>
+  macOS on Intel (x86_64) is not supported. Cocreate uses the Apple Neural Engine for local AI transcription and hardware video decode via VideoToolbox, both of which require Apple Silicon.
+</Note>
+
+**Recommended storage:** At least 4 GB of free disk space for the application itself. Media analysis and project databases are stored separately in your home directory.
+
+## Download
+
+Download the latest version of Cocreate from [cocreate.so](https://cocreate.so). The current release is **v0.0.119**.
+
+<Tabs>
+  <Tab title="macOS">
+    ### Download
+
+    Download the `.dmg` installer from [cocreate.so](https://cocreate.so). The file is named `Cocreate-<version>-arm64.dmg`.
+
+    ### Install
+
+    1. Open the downloaded `.dmg` file. A Finder window opens showing the Cocreate app icon and an Applications folder shortcut.
+    2. Drag the **Cocreate** icon into the **Applications** folder.
+    3. Eject the disk image.
+
+    ### First launch and Gatekeeper
+
+    The first time you open Cocreate, macOS Gatekeeper may display a dialog saying the app cannot be opened because it is from an unidentified developer, or that it was downloaded from the internet.
+
+    To approve it:
+
+    1. Open **System Settings** (macOS 13+) or **System Preferences** (macOS 12).
+    2. Go to **Privacy & Security**.
+    3. Scroll to the **Security** section. You will see a message about Cocreate being blocked.
+    4. Click **Open Anyway**.
+    5. In the confirmation dialog, click **Open**.
+
+    After this one-time approval, Cocreate opens normally on every subsequent launch.
+
+    <Tip>
+      Alternatively, right-click (or Control-click) the Cocreate app in your Applications folder and choose **Open** from the context menu. This bypasses the Gatekeeper block directly without going through System Settings.
+    </Tip>
+
+    ### Uninstall
+
+    Drag Cocreate from your Applications folder to the Trash. To remove all application data (projects, logs, and cached settings), also delete `~/Library/Application Support/cocreate`.
+  </Tab>
+
+  <Tab title="Windows">
+    ### Download
+
+    Download the `.exe` installer from [cocreate.so](https://cocreate.so). The file is named `Cocreate-Setup-<version>.exe`.
+
+    ### Install
+
+    1. Double-click the downloaded `.exe` file to launch the NSIS installer.
+    2. Follow the on-screen prompts. The default installation path is `C:\Users\<YourName>\AppData\Local\Programs\cocreate`.
+    3. Cocreate launches automatically when the installer finishes.
+
+    The installer creates a Start Menu shortcut and a desktop shortcut. You can launch Cocreate from either location on subsequent runs.
+
+    ### Windows SmartScreen
+
+    On first run, Windows SmartScreen may display a warning: *Windows protected your PC*. Click **More info**, then click **Run anyway** to proceed. This prompt appears once for newly downloaded executables and will not recur.
+
+    ### Uninstall
+
+    Open **Settings → Apps → Installed apps**, search for Cocreate, and click **Uninstall**. To remove all application data, also delete `%APPDATA%\cocreate`.
+  </Tab>
+
+  <Tab title="Linux">
+    ### Download
+
+    Download either the `.AppImage` or `.deb` package from [cocreate.so](https://cocreate.so).
+
+    ### AppImage
+
+    1. Download `Cocreate-<version>.AppImage`.
+    2. Make it executable:
+       ```bash
+       chmod +x Cocreate-<version>.AppImage
+       ```
+    3. Run it:
+       ```bash
+       ./Cocreate-<version>.AppImage
+       ```
+
+    No installation step is required. The AppImage is portable — copy it to any location you prefer.
+
+    ### Debian / Ubuntu (.deb)
+
+    1. Download `cocreate_<version>_amd64.deb`.
+    2. Install it:
+       ```bash
+       sudo dpkg -i cocreate_<version>_amd64.deb
+       ```
+    3. Launch Cocreate from your application menu or by running `cocreate` in a terminal.
+
+    <Note>
+      Local AI transcription (Parakeet CoreML) is a macOS-only feature. On Linux, airgapped mode disables transcription and falls back to YOLO-only slate detection. Cloud transcription via Deepgram works normally when an internet connection is available.
+    </Note>
+  </Tab>
+</Tabs>
+
+## What gets installed
+
+Cocreate is a self-contained bundle. The following components are included — you do not need to install or configure any of them separately:
+
+| Component | Purpose |
+|---|---|
+| FFmpeg + ffprobe | Media analysis, transcoding, and clip export |
+| Python 3.12 runtime | Backend analysis and export engine |
+| YOLO clapperboard model (ONNX) | Local slate detection |
+| Parakeet TDT ASR (CoreML) | Local/airgapped transcription (macOS only) |
+| raw2bmx, Tesseract, libvips | MXF handling, OCR, and image processing |
+| SQLite | Local project database |
+
+## Auto-updates
+
+Cocreate checks for updates automatically in the background. When a new stable release is available:
+
+1. Cocreate downloads the update silently while you work.
+2. A notification appears when the download is ready.
+3. Click **Restart and Update** — or wait until your next quit. Cocreate installs the update and relaunches.
+
+Updates are delivered from the GitHub releases channel. Auto-update is disabled in airgapped mode and on beta builds (which have their own separate release channel).
+
+<Note>
+  The current stable release is **v0.0.119**. Check **Cocreate → About** (macOS) or **Help → About** (Windows/Linux) to confirm which version is installed.
+</Note>

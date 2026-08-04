@@ -1,0 +1,84 @@
+---
+title: "Create Proxies and Edit-Ready Media During Transfer"
+sidebarTitle: "Transcode on Offload"
+description: "Transcode to DNxHR, ProRes, or H.264 as Cocreate copies your files. Skip a separate transcode pass and land Avid-native proxies on your edit volume."
+---
+
+Traditional post-production ingest is a two-stage process: copy the camera originals to nearline, then run a separate transcode pass to create offline proxies for the edit suite. Each stage occupies the storage I/O and operator attention that might be better spent on the next day's material. Cocreate collapses both stages into one by transcoding during the copy — as each file travels from the source card to your nearline volume, a proxy is simultaneously written to your edit volume. By the time the progress bar completes, your nearline backup is verified and your editor's proxies are already in place.
+
+## How it works
+
+When you enable encoding in Card Manager, Cocreate reads each source file once and fans the output to two destinations in parallel:
+
+- The **original camera file** goes to your nearline destination with full checksum verification, exactly as it would in a copy-only transfer.
+- The **transcoded proxy** is written to a separate folder — typically directly into `Avid MediaFiles/MXF/<n>` on your edit volume — in the codec and container you specify.
+
+Because both operations run in the same pass, there is no additional wall-clock time for the transcode beyond the extra write bandwidth required. If your edit volume is on a fast local SSD, the overall transfer time is usually determined by the source card's read speed rather than the encode.
+
+## Enable encoding in Card Manager
+
+Open the **Encoding** section in the transfer configuration panel and turn on the **Encoding** switch. The encoding fields expand to reveal codec, container, output folder, and frame-rate options.
+
+## Available codecs and containers
+
+Choose the codec that matches your editorial workflow:
+
+| Codec | Container | Typical use |
+|---|---|---|
+| **DNxHR LB** | MXF OP-Atom | Avid offline proxy — lowest data rate, smallest files |
+| **DNxHR SQ** | MXF OP-Atom | Avid offline proxy — standard quality, balanced rate |
+| **DNxHR HQ** | MXF OP-Atom | Avid online or high-quality proxy |
+| **ProRes 422** | MOV | Premiere, Resolve, or FCP offline proxy |
+| **ProRes 422 HQ** | MOV | Premiere, Resolve, or FCP — higher fidelity |
+| **H.264** | MP4 | Lightweight review copies or web delivery |
+| **H.265** | MP4 | Compact review copies; higher decode overhead |
+
+<Note>
+  MXF OP-Atom is the required container for Avid Media Composer. If you are targeting Avid, select **MXF OP-Atom** alongside any DNxHR codec. ProRes and H.264/H.265 output is written as MOV or MP4 regardless of container selection.
+</Note>
+
+## Output folder options
+
+Use the **Store in** dropdown to control where proxies land:
+
+- **cocreate_transcodes** — Cocreate writes proxies into a `cocreate_transcodes` subfolder inside the job's output directory. Use this when you have not pre-designated an edit volume.
+- **Custom folder** — Proxies go to a path you specify. Use this to write directly into an Avid or Premiere media folder structure.
+
+When targeting Avid, set **Store in** to **Custom folder**, enter the root of your edit volume (for example `/Volumes/EDIT_01`), and set the **MXF folder** number. Cocreate writes the output to:
+
+```text
+/Volumes/EDIT_01/Avid MediaFiles/MXF/<n>/
+```
+
+Avid Media Composer scans this path automatically and sees the proxies as native managed media — no re-linking or consolidation required.
+
+## Frame rate policy
+
+Use the **Frame rate** dropdown to control the output frame rate:
+
+- **Preserve source** — the proxy matches the source frame rate exactly. Use this for most workflows.
+- **Specific frame rate** — forces the output to a target rate. Use only when your delivery specification requires a specific frame rate that differs from the camera original.
+
+For most productions, **Preserve source** is the correct choice. Forcing a frame rate change on camera originals can introduce cadence issues during the online conform.
+
+## Example: Avid DNxHR LB proxy workflow
+
+The following configuration generates Avid-compatible offline proxies directly on an edit volume during the offload:
+
+```text
+Encoding:      ON
+Codec:         DNxHR LB
+Container:     MXF OP-Atom
+Frame rate:    Preserve source
+Store in:      Custom folder
+Custom folder: /Volumes/EDIT_01
+MXF folder:    1
+```
+
+Output path: `/Volumes/EDIT_01/Avid MediaFiles/MXF/1/`
+
+With this configuration, Cocreate copies originals to your nearline destination, generates DNxHR LB MXF OP-Atom proxies on the edit volume, and verifies the originals — all in one pass.
+
+## ARRIRAW support
+
+ARRIRAW transcoding is supported but requires a configured ART-CMD binary. If you are working with ARRIRAW camera originals, contact your facility administrator to confirm that the ART-CMD path is set in Cocreate's preferences before configuring transcode-on-offload for those rolls.

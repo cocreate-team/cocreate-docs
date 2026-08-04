@@ -1,0 +1,109 @@
+{
+  "projectType": "saas",
+  "projectName": "Cocreate",
+  "projectDescription": "A professional desktop application for film and TV post-production that automates the full dailies workflow — from verified camera card offload through AI-powered metadata analysis, audio/video sync, and native NLE export into Avid, Premiere, and DaVinci Resolve.",
+  "theme": "almond",
+  "primaryColor": "#66bc4b",
+  "lightColor": "#4c9a42",
+  "darkColor": "#da8d0d",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "installation",
+              "account-setup"
+            ]
+          },
+          {
+            "group": "Card Manager",
+            "pages": [
+              "card-manager/overview",
+              "card-manager/transfers",
+              "card-manager/verification",
+              "card-manager/transcode-on-offload",
+              "card-manager/expected-deliveries",
+              "card-manager/ingest-log"
+            ]
+          },
+          {
+            "group": "Projects & Media",
+            "pages": [
+              "projects/overview",
+              "projects/importing-media",
+              "projects/media-browser",
+              "projects/organize-drive"
+            ]
+          },
+          {
+            "group": "Analysis & Sync",
+            "pages": [
+              "analysis/ai-analysis",
+              "analysis/slate-detection",
+              "analysis/transcription",
+              "analysis/av-sync"
+            ]
+          },
+          {
+            "group": "Export",
+            "pages": [
+              "export/overview",
+              "export/avid",
+              "export/premiere",
+              "export/resolve",
+              "export/reports"
+            ]
+          },
+          {
+            "group": "Collaboration",
+            "pages": [
+              "collaboration/dashboard",
+              "collaboration/publishing"
+            ]
+          },
+          {
+            "group": "Account & Billing",
+            "pages": [
+              "account/subscription",
+              "account/airgapped-mode"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Checksum-verified multi-destination media offload with MHL, receipts, and HTML directory snapshots",
+    "Transcode-during-offload to DNxHR MXF OP-Atom, ProRes, H.264/265 directly to Avid MediaFiles",
+    "AI-powered slate detection (YOLO + GPT-4o Vision) with transcript-based fallback via Deepgram Nova-3",
+    "Timecode, waveform, and visual clap sync with multicam grouping",
+    "One-click native NLE export: Avid .avb bins, Premiere .prproj, DaVinci Resolve .drp — no NLE app required",
+    "Bin structure builder with metadata column mapping, color labels, and stringout sequences",
+    "Client dashboard publishing at dashboard.cocreate.so with per-roll ingest log, sync status, and reports",
+    "Expected-roll delivery validation with missing-roll detection and clip-count checking",
+    "Portable .ccrt project files with automatic media relinking",
+    "Offline/airgapped mode with on-device Parakeet ASR transcription via Apple Neural Engine",
+    "Per-project reports: PDF/CSV roll reports, media reports, contact sheets, volume summaries",
+    "Pro subscription ($99/mo) with 14-day trial; Permafree tier with 2 analysis-minutes limit"
+  ],
+  "publicApiSurface": [
+    "Card Manager: Transfer, verify, and transcode camera card media",
+    "Expected Deliveries: validate a delivery against a manifest of expected rolls",
+    "Ingest Log: per-step operational audit trail, CSV export, dashboard sync",
+    "AI Analysis Pipeline: slate detection, transcription, metadata propagation",
+    "Slate fields: scene, take, roll, camera, date, director, tags",
+    "Audio/Video Sync: timecode sync, waveform sync (BBC cross-correlation), multicam grouping",
+    "Bin Structure Builder: drag-and-drop NLE export configuration with presets",
+    "Export targets: Avid (.avb + OP-Atom MXF), Premiere (.prproj), Resolve (.drp), XMEML, FCPXML",
+    "Organize Drive: folder hierarchy builder with dynamic tags, copy/move execution",
+    "Dashboard publish: versioned project snapshots, org roles, hosted review media",
+    "Reports: PDF/CSV per project, per roll, per scene; HTML directory snapshots",
+    "Subscriptions: Pro plan (~$99/mo), Permafree plan, 14-day trial, bypass codes",
+    "Auth: email/password and Google OAuth via Supabase"
+  ]
+}

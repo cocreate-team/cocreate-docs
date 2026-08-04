@@ -1,0 +1,76 @@
+---
+title: "Export Dailies to Avid, Premiere, and Resolve from Cocreate"
+sidebarTitle: "Overview"
+description: "Cocreate generates native NLE project files offline — no Avid, Premiere, or Resolve needed. Build your bin structure once and export to any target."
+---
+
+Cocreate handles the full journey from camera card to editor's timeline, and at the delivery end sits a single, unified export engine. One **Bin Structure Builder** drives every supported target — Avid Media Composer `.avb` bins, Adobe Premiere Pro `.prproj` projects, DaVinci Resolve `.drp` projects, XMEML, FCPXML, and rendered Export Clips — so you design your bin hierarchy once and push it to whichever NLE the edit team needs. Because Cocreate writes these formats natively at the byte level, the entire process is offline: no copy of Avid, Premiere, or Resolve has to be running on the machine.
+
+## The Bin Structure Builder
+
+The Bin Structure Builder is a drag-and-drop canvas where you construct the exact folder and bin tree your editor will open. Every node in the tree — whether a static named bin, a template bin that expands per roll or per day, a clip element, a multicam element, or a stringout sequence — carries its own settings panel. Changes you make to the structure apply to whichever export targets you run next.
+
+### Key concepts
+
+- **Static bins** hold a fixed name and contain whatever elements you place inside them.
+- **Template bins** dynamically expand based on an *organize-by* rule: shoot day, date, scene, camera, roll, take, tag, or a custom metadata field. Cocreate creates one bin per unique value found in your media.
+- **Elements** are the clips or sequences placed inside bins: video clips, audio clips, multicam group clips, and stringout (sequence) elements.
+- **Dividers** add visual section breaks inside a bin — useful when you need `00 SYNC MAPS / 01 RUSHES / 98 AMA` naming conventions.
+
+## Opening Organize & Export
+
+Navigate to your project and select the **Organize & Export** tab in the top navigation. Press **Export Bins** to open the Bin Structure Builder alongside the export settings panel.
+
+## Supported Export Targets
+
+| Target | Output | What it produces |
+|---|---|---|
+| **Avid Media Composer** | `.avb` bin files | MasterMob/FileMob bin trees, OP-Atom MXF consolidation, AMA-linked bins, sync map and auto-seq sequences |
+| **Adobe Premiere Pro** | `.prproj` project | Unlimited-depth bin hierarchy, multicam sequences, stringout timelines, proxy attachment |
+| **DaVinci Resolve** | `.drp` project | Nested Media Pool bins, calibrated clip colors, markers, stringout timelines |
+| **XMEML / FCP7** | XML interchange | Bins, sync-aware multicam, and stringout sequences in DTD-validated XMEML |
+| **FCPXML** | FCPXML | Final Cut Pro XML for broad interchange |
+| **Export Clips** | Rendered media files | Trimmed, renamed transcodes with burn-ins, LUT baking, and stringouts as rendered files |
+
+## Working with Presets
+
+Presets let you save a complete export configuration — bin structure, organize-by rules, metadata mappings, and all element settings — and reload it in seconds. Cocreate ships with built-in presets for common workflows; **Sync Map / Auto Seq** is the fastest way to get a production-ready Avid handoff with per-day sync maps and per-roll auto sequences.
+
+To load a preset, press the preset dropdown at the top of the Export Bins screen and select the preset name. The bin structure and all settings update immediately. To save your own preset, configure the structure and settings to your liking, open the same dropdown, and press **Save as Preset**. Cocreate stores presets as `.ccrtp` files that you can share across your team.
+
+## Common Export Workflow
+
+<Steps>
+  <Step title="Build your bin structure">
+    Drag bins, template bins, and clip elements onto the canvas. Use organize-by rules (roll, day, scene, camera) to let Cocreate expand the tree automatically at export time.
+  </Step>
+  <Step title="Map your metadata">
+    Open each clip element's settings panel and add **Metadata Column Mappings**. Map your roll tag, scene field, camera field, or any custom field to the destination NLE's metadata columns — for example, Roll tag → Disk Label, or a literal value → TapeID.
+  </Step>
+  <Step title="Choose your export target and destination">
+    In the export settings panel on the right, select your NLE target, set the output folder, and configure any target-specific options such as Avid MediaFiles path or Premiere version.
+  </Step>
+  <Step title="Export">
+    Press **Export**. Cocreate expands all template bins, writes the native project files, and places them in your chosen destination — no NLE application required.
+  </Step>
+  <Step title="Open in your NLE">
+    Hand the exported folder to your editor. In Avid, use **File → Open Project**; in Premiere, double-click the `.prproj`; in Resolve, use **File → Import Project**.
+  </Step>
+</Steps>
+
+## Explore Each Export Target
+
+<CardGroup cols={2}>
+  <Card title="Avid Media Composer" icon="film" href="/export/avid">
+    Export real `.avb` bin files with managed and AMA-linked clips, sync maps, auto sequences, and full metadata column mapping — no Avid app needed.
+  </Card>
+  <Card title="Adobe Premiere Pro" icon="video" href="/export/premiere">
+    Generate `.prproj` files for Premiere 2025 or 2026 with multicam sequences, stringout timelines, proxy attachment, and dialogue markers.
+  </Card>
+  <Card title="DaVinci Resolve" icon="palette" href="/export/resolve">
+    Write native `.drp` project files with nested bins, calibrated clip colors, markers, and stringout timelines — offline, no Resolve required.
+  </Card>
+  <Card title="Reports" icon="file-lines" href="/export/reports">
+    Generate PDF, CSV, HTML, and MHL production reports — roll reports, media reports, contact sheets, and checksum receipts.
+  </Card>
+</CardGroup>

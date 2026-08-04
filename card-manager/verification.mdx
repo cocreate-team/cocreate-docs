@@ -1,0 +1,88 @@
+---
+title: "Checksum Verification and Receipts for Media Transfers"
+sidebarTitle: "Verification"
+description: "Verify every copied file with checksums in Cocreate. Choose from CRC32, MD5, xxHash, SHA-256, or SHA-512. Generate MHL files and HTML receipts."
+---
+
+In professional post-production, a copy that has not been verified is not a backup — it is an assumption. Silent bit-rot, a failing drive controller, or a network-stack hiccup can produce a destination file that looks complete but differs from the source in ways that only become apparent during an online conform or a client screening. Cocreate's verification system removes that uncertainty by computing checksums on the source and destination in a single streamed pass during the copy, comparing them immediately, and writing a tamper-evident receipt that travels with the media for the lifetime of the production.
+
+## Verification methods
+
+Cocreate supports six verification methods. Choose the one that matches your facility's security requirements and the transfer speed available on your hardware.
+
+| Method | Speed | Collision resistance | Typical use case |
+|---|---|---|---|
+| **File size only** | ★★★★★ | None — detects truncation only | Quick sanity check; not a substitute for checksums |
+| **CRC32** | ★★★★☆ | Low | Fast verification on large volumes where speed is critical |
+| **MD5** | ★★★☆☆ | Moderate (cryptographically broken, fine for integrity) | Widely supported; compatible with most MHL readers |
+| **xxHash** | ★★★★★ | Moderate | Fastest non-cryptographic hash; ideal for on-set time pressure |
+| **SHA-256** | ★★☆☆☆ | High (cryptographic) | Archive deliverables, legal holds, or facility mandates |
+| **SHA-512** | ★★☆☆☆ | Very high (cryptographic) | Maximum assurance; slower throughput on large files |
+| **Byte-by-byte compare** | ★☆☆☆☆ | Exact — reads every bit on both sides | Paranoid verification; use when in doubt about a destination drive's health |
+
+Checksums are streamed during the copy rather than computed in a separate post-copy pass, which means verification adds minimal wall-clock time to most transfers. Cocreate also scans for pre-existing sidecar checksums (`.md5`, `.mhl`, and similar manifest files) alongside your source media and incorporates them into the verification report automatically.
+
+## Configure verification settings
+
+Before you start a transfer, open **Verification Settings** from the Card Manager toolbar:
+
+1. Under **Verification**, select your preferred checksum method from the dropdown.
+2. Under **Reports**, choose which receipt formats to generate:
+   - **Generate per-roll receipts** — one TXT log per roll containing per-file checksums, file sizes, and transfer timestamps.
+   - **Generate JSON checksum manifest** — a machine-readable manifest of every source/destination hash pair for the entire job.
+   - **Generate MHL file** — a Media Hash List conforming to the ASC MHL standard, compatible with Silverstack, YoYotta, and other facility tools.
+   - **Generate HTML directory snapshot** — a self-contained offline HTML receipt (see below).
+3. Click **Save**.
+
+These settings persist between sessions, so you only need to adjust them when your workflow changes.
+
+## When verification fails
+
+If Cocreate detects a checksum mismatch or a read error at any point during the transfer:
+
+- The affected file is flagged immediately in the progress display.
+- The job continues copying all remaining files — a single failure does not halt the queue.
+- On completion, the job card shows a failed status. Click **Reports & receipts** to open a per-file diagnostics view that shows the expected hash, the actual hash, and the relevant log excerpt from the copy process.
+
+Investigate a failed destination drive before re-running. If the same file fails on a retry, suspect the destination storage rather than the source.
+
+## Receipts
+
+Every completed transfer generates a set of receipts that document what was copied, who copied it, and whether it arrived intact.
+
+### Per-transfer TXT log
+
+A plain-text file listing every file in the transfer with its source path, destination path, file size, checksum value, and pass/fail status. Operator initials, work order, and barcode appear in the header. This file is suitable for printing or attaching to a digital handoff package.
+
+### JSON checksum manifest
+
+A structured JSON file containing the full hash map for the job. Useful for automated pipeline validation or for importing into facility asset-management systems that can parse JSON.
+
+### MHL (Media Hash List)
+
+Cocreate generates ASC MHL v1 files that record the hash algorithm, per-file hashes, and file sizes in the format expected by hardware and software verification tools across the industry. MHL files travel alongside the media and allow a downstream facility to re-verify the delivery without access to the original source.
+
+To generate an MHL for a completed job, open **Reports & receipts** on the job card and click **Export MHL**.
+
+## HTML directory snapshots
+
+An HTML directory snapshot is a self-contained offline webpage — similar to a Snap2HTML export — that captures the complete folder tree of a volume at a point in time, including file counts, folder sizes, and a client-side search interface. No server is required; the HTML file opens directly in a browser.
+
+Snapshots are typically generated twice per offload:
+
+- **Receipt 1** — a snapshot of the source transport drive, taken before the copy begins. This documents what arrived.
+- **Receipt 2** — a snapshot of the nearline destination folder, taken after the copy completes. This confirms what landed.
+
+To generate a snapshot:
+
+1. Click **Export HTML Snapshot** in the Card Manager toolbar.
+2. Under **Directories**, click the folder button and select the volume or folder to snapshot.
+3. Set an output path under **Location** and enter a file name.
+4. Use the **Log as** dropdown to record whether this is **Drive scan (receipt 1 of 2)** or **Copy verification (receipt 2 of 2)** — this label appears in the Ingest Log.
+5. Click **Export**.
+
+The resulting HTML file contains a searchable, expandable folder tree with file counts and sizes at every level. Share it as an email attachment or drop it into a job folder alongside your MHL and TXT receipt.
+
+## Exporting receipts from a completed job
+
+All receipts generated for a job are accessible from the **Reports** tab in Card Manager. Select any job from the list and click the receipt filename to open it, or click the download icon to save a copy to a custom location. You can also export receipts in bulk from a date range using the **Reports** view's filter controls.

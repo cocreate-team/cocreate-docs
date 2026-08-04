@@ -1,0 +1,107 @@
+---
+title: "Import and Analyze Media Files in a Cocreate Project"
+sidebarTitle: "Import Media"
+description: "Add camera files, audio rolls, and mixed media to a Cocreate project. Control which analyses run — slate detection, transcription, and sync — each run."
+---
+
+Importing media into Cocreate is more than a file copy — it is the trigger for a full AI analysis pipeline that reads slates, transcribes dialogue, extracts timecodes, and synchronizes camera and sound. Every import run gives you precise control over which passes execute, so you can, for example, run a fast metadata-only import on day one and follow up with transcription and sync once all the audio rolls arrive. Understanding the import panel and its per-run toggles lets you move efficiently through each stage of the dailies workflow without re-running expensive analysis unnecessarily.
+
+## Supported Formats
+
+Cocreate ingests a broad range of professional camera and audio formats:
+
+- **Video:** ProRes (all variants), MXF (DNxHD, DNxHR, XAVC), H.264, H.265, ARRIRAW (requires a configured ART-CMD binary), and most formats readable by FFmpeg
+- **Audio:** BWF (`.wav`) with embedded iXML and timecode metadata, MXF OP-Atom audio files, and multichannel production sound files from Sound Devices, Zoom, and Zaxcom recorders
+
+<Note>
+  MXF OP-Atom audio and video siblings are automatically grouped into a single
+  logical asset during import — you do not need to pre-sort them.
+</Note>
+
+## Importing Media Step by Step
+
+<Steps>
+  <Step title="Open or create a project">
+    From the Home screen, click an existing project to open it, or click **New
+    Project** to create one. You can also let Cocreate create a project
+    automatically at the end of a Card Manager transfer — the new project opens
+    directly in the project tab with all transferred rolls already visible.
+  </Step>
+
+  <Step title="Switch to the Import Media sub-tab">
+    Inside your project, click the **Import Media** tab at the top of the
+    workspace. You will see a dual-panel media browser: drives and favorites on
+    the left, and the contents of the selected folder on the right. A separate
+    **Process** panel sits at the bottom of the screen and is where you
+    configure analysis before running it.
+  </Step>
+
+  <Step title="Browse or drag-drop your media">
+    Navigate to your camera cards or nearline folder using the left-panel drive
+    tree, or drag folders and files directly from Finder onto the import panel.
+    You can select individual clips, entire roll folders, or a mix of both using
+    **⌘-click** for individual items or **Shift-click** for ranges. The right
+    panel supports rectangular marquee selection for dense grids of thumbnails.
+
+    Cocreate runs an import preflight as you select files, checking for
+    duplicates and flagging any that are already present in the project with a
+    **Show Duplicates** filter so you can decide how to handle them.
+  </Step>
+
+  <Step title="Configure analysis toggles in the Process panel">
+    Before clicking **Process**, review the toggles in the Process panel. Each
+    toggle applies only to **this import run** and has no effect on clips already
+    analyzed in previous runs:
+
+    | Toggle | What it does |
+    |---|---|
+    | **Detect slates** | Runs YOLO clapperboard detection and GPT-4o Vision to read scene, take, roll, camera, and other slate fields from video frames |
+    | **Enable transcription** | Sends audio to Deepgram Nova-3 (or the on-device Parakeet model when airgapped) for word-level transcript generation |
+    | **Sync audio and video** | Matches camera files to audio rolls by timecode, then confirms or refines offsets with waveform fingerprinting |
+    | **Clear existing fields** | Erases previously written metadata fields before this run — use with caution; leave it off when re-running a single pass on already-analyzed clips |
+
+    <Tip>
+      Turn off **Clear existing fields** when you want to re-run one specific
+      analysis pass — for example, running sync after new audio rolls arrive
+      without disturbing the slate data already written to your video clips.
+    </Tip>
+  </Step>
+
+  <Step title="Click Process">
+    Click the **Process** button. Cocreate validates the selection one final
+    time, presents an **Unslated Clips** dialog if any video files have no
+    detected slate (giving you the option to skip or proceed), and then enqueues
+    the analysis job.
+  </Step>
+
+  <Step title="Monitor analysis progress">
+    A jobs indicator appears in the toolbar showing a live progress bar for each
+    active analysis stage — import, slate extraction, transcription, and sync
+    each report separately. You can continue navigating the app, reviewing
+    already-analyzed clips, or even start a second import run while the first is
+    still processing.
+
+    When sync completes, any pairs that the engine is uncertain about are
+    surfaced in a **Dubious Sync Pairs** review modal. Play each candidate
+    through the built-in verify player and click **Keep** or **Discard** for
+    each one before confirming.
+  </Step>
+
+  <Step title="Switch to the Media tab to review results">
+    Once analysis finishes, click the **Media** tab. Your clips appear in
+    List View by default, with all extracted metadata — scene, take, roll,
+    camera, timecode, transcription, and sync partner — filled in and ready to
+    edit. Switch between the four media views using **⌘1–⌘4** to review slates,
+    browse by scene, or inspect the sync map.
+  </Step>
+</Steps>
+
+## Re-Analyzing Clips
+
+You can re-import the same files at any time to run additional passes. For example:
+
+- **Re-run sync only:** Select the clips in the Media tab, right-click, choose **Resync Selected**, or return to Import Media, add the same files, leave only **Sync audio and video** enabled, and click **Process**.
+- **Re-run slate reading:** Use **Rescan Slate** from the right-click context menu in the FileViewer to trigger a fresh slate extraction on individual clips without affecting transcription or sync data.
+- **Deep Slate Scan:** For clips the quick scan missed, enable **Deep Slate Scan** from the context menu. This runs an uncapped full-video sweep rather than the default priority-zone pass.
+
+Because **Clear existing fields** is a deliberate opt-in, re-running a single pass never clobbers data from passes you do not want to repeat.

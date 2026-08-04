@@ -1,0 +1,74 @@
+---
+title: "Validate Camera Card Deliveries Against Expected Rolls"
+sidebarTitle: "Expected Deliveries"
+description: "Use Expected Deliveries in Cocreate to verify that every expected roll arrived, check clip counts, and catch naming errors before ingest begins."
+---
+
+Camera card deliveries rarely arrive with a formal manifest, which means a data wrangler typically relies on a production email, a camera sheet, or their own notes to confirm that everything expected has actually turned up on the drive. Missing a roll at ingest is a costly mistake — the card may already be back on set or wiped. Expected Deliveries gives you a formal, automated validation step: you paste in a list of what should be there, and Cocreate checks the delivery against it before the copy begins. Problems surface in seconds rather than hours.
+
+## What Expected Deliveries checks
+
+When you attach an expected-roll list to a transfer job, Cocreate compares the list against the source folders it finds on the card and reports:
+
+- **Present** — the roll exists on the card and its clip count matches what you entered.
+- **Clip count mismatch** — the roll exists but contains a different number of clips than expected (amber warning).
+- **Unexpected extra** — a roll exists on the card that does not appear in your expected list (amber warning).
+- **Missing** — a roll from your list is absent from the card entirely (amber warning, not a blocker).
+- **Sequence gaps or duplicates** — the numeric prefix sequence of your rolls has unexpected gaps or repeated values.
+
+<Note>
+  A missing roll is a warning, not a transfer blocker. Card Manager will proceed with the transfer using the media that is present. The missing roll is flagged in the Ingest Log and on the job receipt so the issue is documented even if you choose to continue.
+</Note>
+
+## Create an expected-roll list
+
+Open the **Expected Deliveries** section in the transfer configuration panel:
+
+1. Click the project dropdown and select the project to associate with this delivery. To have Cocreate create a new project automatically when the transfer completes, select **New project (auto-created)**.
+2. Click **Paste list…** to open the entry dialog.
+3. Paste your expected rolls, one per line, in the format:
+
+   ```
+   roll_name, expected_clip_count
+   ```
+
+4. Click **Import** to apply the list.
+
+The Expected Deliveries panel updates immediately to show which rolls are present, missing, or mismatched based on the source folders currently visible to Card Manager.
+
+## Expected-roll list format
+
+Each line contains the roll name and the expected number of clips, separated by a comma. The roll name must match the folder name on the card exactly, including case and underscores.
+
+```text
+001_JRYP_280425_FX9_A_01, 7
+002_JRYP_280425_FX9_B_01, 7
+003_JRYP_280425_MAVICMINI_D_01, 4
+004_JRYP_280425_SOUND_01, 7
+005_JRYP_290425_FX9_A_01, 9
+006_JRYP_290425_FX9_B_01, 9
+007_JRYP_290425_MAVICMINI_D_01, 4
+008_JRYP_290425_SOUND_01, 9
+009_JRYP_GHOST, 4
+```
+
+In this example, roll `009_JRYP_GHOST` does not exist on the card. Card Manager flags it as missing with an amber warning, records it in the Ingest Log, and proceeds with the transfer for all rolls that are present.
+
+## Reading the results
+
+After importing the list, each roll in the Expected Deliveries panel shows a status indicator:
+
+| Status | Colour | Meaning |
+|---|---|---|
+| All present, counts match | Green | Everything arrived as expected |
+| Clip count mismatch | Amber | Roll present but has more or fewer clips than listed |
+| Unexpected roll on card | Amber | Roll not in your manifest — verify with production |
+| Missing roll | Amber | Roll in your manifest but absent from the card |
+
+Hover over any amber row to see a detail tooltip explaining the discrepancy. All results are written to the Ingest Log automatically — you do not need to take a screenshot or make a manual note.
+
+## Linking to a project
+
+The project you select in the Expected Deliveries section becomes the Cocreate project that the ingested media lands in after the transfer. If you select **New project (auto-created)**, Cocreate names the project from the job metadata (operator initials, work order, and date) and opens it as soon as the transfer completes.
+
+To associate the delivery with an existing project instead, open the dropdown and select the project by name. This is useful when you are receiving a multi-day delivery across several transport drives and all rolls should live in the same project.

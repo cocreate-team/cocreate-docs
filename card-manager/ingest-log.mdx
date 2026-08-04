@@ -1,0 +1,54 @@
+---
+title: "Track Every Ingest Step with the Cocreate Ingest Log"
+sidebarTitle: "Ingest Log"
+description: "The Cocreate Ingest Log records every transfer, verification, and wrangle step with timestamps, operator details, and per-roll results. Export as CSV."
+---
+
+The Ingest Log is Card Manager's operational audit trail. Every action that touches your media — a drive scan, a nearline copy, a verification pass, a wrangle rename, a project ingest — is recorded as a timestamped entry with the operator's initials, work order, barcode, and the outcome of the step. The result is a complete, machine-readable history of how every roll moved through ingest, written automatically without any manual logging. If a client or a facility auditor asks what happened to roll 004 on Tuesday, you open the Ingest Log and show them exactly.
+
+## What the Ingest Log records
+
+Each entry in the log captures one step in the ingest pipeline. The steps Cocreate records automatically include:
+
+| Step | What is recorded |
+|---|---|
+| **Drive scan** | Volume name, filesystem, available space, and scan timestamp |
+| **Nearline copy** | Source path, destination path, file count, total size, and start/end timestamps |
+| **Copy verification** | Checksum method, pass/fail result, and any per-file failures with error detail |
+| **Wrangle renames** | Original roll name, renamed roll name, template used, and operator |
+| **Project ingest** | Project name, roll count, clip count, and ingest timestamp |
+| **Bin copy** | Destination path and export timestamp (written when an Avid or Premiere export completes) |
+| **HTML snapshot** | Source directory, output path, and whether it was logged as receipt 1 or receipt 2 |
+
+The operator initials, work order, and barcode you entered in **Delivery info** are attached to every entry created during that job, so filtering by work order instantly isolates all activity for a specific delivery.
+
+## Open the Ingest Log
+
+Click **Open Ingest Log** in the Card Manager toolbar. The log opens as a panel within Card Manager. It is persistent — all entries from all past jobs accumulate here and remain available until you choose to clear them.
+
+## Filter and search
+
+Use the filter bar at the top of the Ingest Log to narrow the displayed entries:
+
+- **Search** — type any text to match against roll names, operator initials, work orders, paths, or step descriptions.
+- **Step type** — filter to show only one category of entry (for example, show only verification results or only wrangle events).
+- **Date range** — restrict the view to a specific day or range of days.
+- **Operator** — show only entries recorded under a particular set of initials.
+
+Filters combine additively. A search for operator `JR` filtered to the **Copy verification** step type shows only the verification entries recorded under that operator's initials, across any date range you have set.
+
+## Export as CSV
+
+Click **Export CSV** in the Ingest Log toolbar to save the current filtered view as a comma-separated file. The export includes all visible columns: step type, timestamp, roll name, operator, work order, barcode, outcome, and detail. This file is suitable for importing into a facility's job-management spreadsheet, attaching to a delivery email, or archiving with the media.
+
+<Tip>
+  If your facility requires a hand-off document alongside the media, filter the Ingest Log to the relevant work order and export the CSV immediately after the transfer completes. The exported file then travels with the receipt TXT and MHL as part of the documented delivery package.
+</Tip>
+
+## Dashboard sync
+
+The Ingest Log syncs to the Cocreate client dashboard when you publish a project. Clients and remote supervisors can view the per-step audit trail, drill into individual roll entries, and download the CSV directly from the dashboard — without needing access to the desktop app or the physical storage. See [Publishing to the Dashboard](/collaboration/dashboard) for details on setting up dashboard access.
+
+<Tip>
+  Use consistent operator initials and work orders on every transfer. Consistent values make the Ingest Log filterable across months of material, and they carry through to receipts, MHL files, and dashboard entries — a small habit that saves significant time during any production audit.
+</Tip>

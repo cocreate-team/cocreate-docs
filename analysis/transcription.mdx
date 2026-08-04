@@ -1,0 +1,118 @@
+---
+title: "Automatic Dialogue Transcription: Deepgram and On-Device ASR"
+sidebarTitle: "Transcription"
+description: "Transcribe dialogue in your camera files and audio rolls using Deepgram Nova-3 in the cloud or the bundled on-device model for airgapped workflows."
+---
+
+Cocreate transcribes every clip's dialogue as part of the standard analysis run, turning hours of production audio into a searchable, per-word timestamped transcript without any extra steps. Transcription serves two purposes in the workflow: it feeds the slate extraction pipeline as a complementary signal (verbal slate callouts are parsed directly from the transcript before any video frame is analyzed), and it produces the Dialogue panel content that lets you locate, review, and search spoken lines inside the player. When you export to Avid or Premiere, those transcripts become clip markers and sequence markers in the NLE — meaning an editor can search dialogue directly inside their project the same way they search in Cocreate. Transcription is available in two modes depending on your network environment: cloud-based Deepgram Nova-3 for standard workflows, and a fully on-device model for shoots that require airgap.
+
+## Choosing a transcription mode
+
+<Tabs>
+  <Tab title="Cloud (Deepgram Nova-3)">
+    ### Cloud transcription with Deepgram Nova-3
+
+    Cloud transcription is the default mode for connected workflows. Cocreate sends audio to Deepgram's Nova-3 model and receives a rich transcript with:
+
+    - **Per-word timestamps** — every word is anchored to an exact timecode position in the source file
+    - **Per-word confidence scores** — low-confidence words are flagged so you can spot uncertain transcriptions quickly
+    - **Multichannel support** — up to 20 discrete audio channels processed in a single pass, with production-sound-aware channel detection that identifies mix channels from Sound Devices, Zoom, and Zaxcom track labels and deduplicates words heard simultaneously across channels
+    - **Smart formatting** — punctuation, capitalization, and number formatting applied automatically
+
+    Audio is preprocessed locally before upload: Cocreate extracts a 16 kHz mono mix (or per-channel mixes for multichannel files) and applies silence gating to minimize data transfer. Your original media files are never uploaded to Deepgram — only the prepared audio extract.
+
+    #### Enabling cloud transcription
+
+    Cloud transcription is on by default. Before running analysis, confirm that the **Enable transcription** toggle is active in the **Process** panel on the Import Media tab. As long as Cocreate is connected to the internet and your account is active, cloud transcription runs automatically.
+
+    #### API key handling
+
+    Your Deepgram and OpenAI API keys are **vended server-side** by Cocreate's backend to authenticated clients. They are never embedded in the application or stored on your machine. This means you don't need to manage API keys yourself — your Cocreate subscription covers the cost and access.
+  </Tab>
+  <Tab title="On-Device / Airgapped">
+    ### On-device transcription with Parakeet TDT
+
+    For shoots on secure sets, remote locations without connectivity, or facilities with strict network policies, Cocreate bundles a fully local ASR model: **NVIDIA Parakeet TDT 0.6B v3**, converted to CoreML and driven by a Swift CLI that runs entirely on the **Apple Neural Engine**.
+
+    On-device transcription requires no internet connection and produces no outbound network traffic. The model runs directly on your Mac's Neural Engine, delivering fast inference even on long audio rolls.
+
+    Key characteristics:
+
+    - **No network required** — runs fully offline; no data leaves your machine
+    - **Deepgram-compatible output** — emits the same per-word timestamp and confidence JSON format as the cloud path, so all downstream features (Dialogue panel, marker export, slate extraction from transcript) work identically
+    - **Comparable accuracy** — suitable for production use on clearly recorded production sound
+    - **Automatic activation** — when Cocreate detects airgapped mode (no network), on-device transcription activates automatically; no manual switching required
+
+    #### Enabling airgapped mode
+
+    Enable airgapped mode in **Settings → General → Airgapped mode**, or start Cocreate without an active internet connection. In airgapped mode, the **Enable transcription** toggle runs Parakeet locally rather than calling Deepgram. See [Airgapped Mode](/account/airgapped-mode) for full setup details.
+
+    <Note>
+      On-device transcription is currently optimized for English. Multichannel support is available but limited to stereo mixdowns in the local path.
+    </Note>
+  </Tab>
+</Tabs>
+
+## Enabling transcription
+
+To include transcription in an analysis run:
+
+1. Open your project and go to the **Import Media** tab.
+2. In the **Process** panel, turn on **Enable transcription**.
+3. Select your clips and press **Process**.
+
+Transcription runs in parallel with slate extraction. For clips already in your project that haven't been transcribed, right-click the clip in the FileViewer and choose **Transcribe selected** to run transcription without re-running the full analysis pipeline.
+
+## Viewing the transcript in the Dialogue panel
+
+Every transcribed clip displays its transcript in the **Dialogue panel**, accessible from the player sidebar while a clip is open.
+
+The Dialogue panel shows transcript segments in chronological order, with each segment linked to a timecode range in the clip. Click any segment to jump the player to that moment in the timeline.
+
+The panel also shows per-word confidence: words below the confidence threshold appear in a lighter style so you can immediately spot uncertain transcription regions when reviewing.
+
+## Searching the transcript
+
+Use the **dialogue search** bar in the Media tab toolbar to search across all transcripts in your project:
+
+1. Press the dialogue search icon in the toolbar, or use the keyboard shortcut.
+2. Type a word or phrase. Matching clips appear in the results list with each hit highlighted in context.
+3. Click a result to open that clip in the player with the Dialogue panel scrolled to the matching segment.
+
+Within the Dialogue panel itself, use the in-panel search (Cmd-F while the panel is focused) for prev/next navigation through matches in a single clip's transcript.
+
+## Editing the transcript manually
+
+Transcript segments in the Dialogue panel are editable:
+
+1. Click any segment text in the Dialogue panel to enter edit mode.
+2. Type your corrections.
+3. Click outside the segment or press Enter to commit.
+
+Manual edits to the transcript are preserved across analysis re-runs unless you explicitly choose **Clear analysis** on the clip and reprocess. Edits do not affect the underlying audio — they update only the text representation in Cocreate and in any subsequent NLE marker exports.
+
+## Exporting dialogue as NLE markers
+
+Cocreate converts transcripts into timecode-anchored markers for export to Avid and Premiere. Segments are split at natural pauses and sentence boundaries to produce clean marker titles.
+
+| NLE | Export format |
+|---|---|
+| **Avid Media Composer** | Clip markers on master clips; sequence markers on stringout sequences and sync-map sequences |
+| **Adobe Premiere Pro** | Clip markers on sequences; sequence markers on stringout timelines |
+
+Dialogue markers are enabled per-element in the **Bin Structure Builder** under each clip or sequence element's settings. Toggle **Embed transcription as markers** to include them in your next export.
+
+<Tip>
+  Dialogue markers in Avid appear as text markers in the Timeline and in the Bin's marker column, making it possible for editors to use Avid's built-in marker search to find any spoken line in the entire project — without leaving the NLE.
+</Tip>
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="AI Analysis" icon="wand-magic-sparkles" href="/analysis/ai-analysis">
+    Overview of the full pipeline, including how transcripts feed into slate extraction
+  </Card>
+  <Card title="Airgapped Mode" icon="wifi-slash" href="/account/airgapped-mode">
+    Setting up Cocreate for fully offline workflows on secure productions
+  </Card>
+</CardGroup>

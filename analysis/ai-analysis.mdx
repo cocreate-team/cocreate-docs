@@ -1,0 +1,118 @@
+---
+title: "AI-Powered Media Analysis in Cocreate Projects"
+sidebarTitle: "AI Analysis"
+description: "Cocreate's AI pipeline automates slate reading, transcription, and metadata extraction. Learn how to trigger, pause, cancel, and review analysis results."
+---
+
+Cocreate's analysis pipeline is the engine that transforms raw camera card files into organized, labeled, editor-ready media. When you trigger analysis, Cocreate processes every video and audio asset in parallel — running ffprobe to extract technical metadata, reading clapperboard text through YOLO detection and GPT-4o Vision, transcribing dialogue via Deepgram or the on-device Parakeet model, and then aligning camera footage to production sound through timecode and waveform matching. Every asset records a **decision path** throughout this process — a per-clip audit log showing exactly which method produced each metadata value and why — so you always have a clear, reviewable trail from raw file to finished metadata. The pipeline handles the work that would otherwise take an assistant editor hours of manual lookup and cross-referencing on every shoot day.
+
+## What the analysis pipeline does
+
+Analysis runs in two stages. First, Cocreate processes each asset concurrently in a thread pool:
+
+1. **Technical metadata extraction** — ffprobe reads container metadata, timecode, frame rate, camera type, shoot date, and roll information directly from the file's headers.
+2. **Transcription** — dialogue is sent to Deepgram Nova-3 (cloud) or the bundled on-device Parakeet model (airgapped), producing a per-word timestamped transcript with confidence scores.
+3. **Slate extraction** — a YOLO clapperboard detector scans the video for slates, then GPT-4o Vision reads the slate fields. If a high-confidence transcript callout ("Scene 12, take 4, marker") is found first, the visual scan may be skipped as a cost-saving shortcut.
+
+After all assets finish Phase 1, Cocreate runs project-wide batch phases: MXF OP-Atom sibling grouping, shoot-day consensus building, keyframe generation, outlier validation, and audio/video sync.
+
+## Triggering analysis
+
+### From the Import Media tab
+
+<Steps>
+  <Step title="Open your project and navigate to Import Media">
+    Select **Import Media** from the project sub-tabs at the top of the workspace.
+  </Step>
+  <Step title="Add your footage">
+    Use the media browser to navigate to your camera card folder and select the clips you want to import, or drag them directly into the import pane.
+  </Step>
+  <Step title="Configure analysis toggles">
+    Before processing, review the toggles in the **Process** panel:
+
+    | Toggle | What it does |
+    |---|---|
+    | **Detect slates** | Reads clapperboard metadata from video frames |
+    | **Enable transcription** | Transcribes dialogue using Deepgram or on-device ASR |
+    | **Sync audio & video** | Matches camera clips to production sound by timecode and/or waveform |
+
+  </Step>
+  <Step title="Press Process">
+    Press **Process** to begin analysis. A live jobs indicator in the toolbar shows per-asset progress for analysis, transcription, and sync.
+  </Step>
+</Steps>
+
+### Re-running analysis from project settings
+
+To re-analyze clips that have already been imported — for example, after adjusting toggle settings or if a previous run was interrupted — right-click any clip or selection in the **Media** tab and choose **Rescan slate**, **Resync selected**, or **Clear analysis** to reset and reprocess.
+
+## Pausing, resuming, and cancelling
+
+Cocreate lets you interrupt analysis at any time without losing work already completed.
+
+- **Pause** — Click the **Pause** button on the jobs indicator. In-progress assets finish their current operation before the queue halts. Pause time is accounted for separately so billing isn't charged for idle time.
+- **Resume** — Click **Resume** to continue from where analysis stopped. Previously completed assets are skipped automatically.
+- **Cancel** — Click **Cancel** to stop analysis entirely. All assets that finished before cancellation retain their extracted metadata. Assets that were mid-processing are marked as incomplete and can be reprocessed individually.
+
+<Note>
+  A forward-progress watchdog monitors analysis and will alert you if a clip appears stuck. This watchdog scales its timeout to the clip's media duration, so long-format files are given appropriate processing time before triggering a warning.
+</Note>
+
+## Auditability: the decision path
+
+Every asset in Cocreate carries a **decision path** — a structured record of every inference step the pipeline took to arrive at the asset's metadata. The decision path captures:
+
+- Which extraction method ran (transcript-first, YOLO+GPT visual, ffprobe tag, or fallback)
+- The confidence score at each step
+- Whether a fallback was triggered and why
+- The raw GPT response and YOLO bounding box coordinates for slate detections
+
+You can inspect the decision path for any clip from the context menu in the **FileViewer** spreadsheet by choosing **View slate**. This is especially useful when reviewing flagged or low-confidence fields before an export.
+
+## Airgapped mode
+
+When running Cocreate without an internet connection, the pipeline automatically switches to airgapped mode. All cloud calls (Deepgram, GPT-4o) are disabled and analysis falls back to:
+
+- **On-device transcription**: NVIDIA Parakeet TDT 0.6B v3 running on the Apple Neural Engine
+- **Local slate detection**: YOLO clapperboard detector running via ONNX Runtime (no GPT Vision OCR step)
+
+Airgapped mode is ideal for on-set use or facilities with strict network restrictions. See [Airgapped Mode](/account/airgapped-mode) for setup instructions.
+
+## Analysis minutes and billing
+
+Cocreate meters usage in **analysis minutes** — the total duration of media submitted for AI analysis.
+
+| Plan | Analysis minutes |
+|---|---|
+| **Pro** | Unlimited |
+| **Permafree** | 2 minutes per project |
+
+Analysis minutes are counted when a clip enters the pipeline for slate detection or transcription. Re-running analysis on a clip that already has completed metadata does not consume additional minutes. Technical-only operations like ffprobe extraction and timecode sync do not count toward your minutes.
+
+<Tip>
+  If you're approaching your Permafree limit, prioritize analysis on your most important clips — typically the camera A-roll with slates — and use batch-apply to propagate metadata to related clips manually. Upgrade to Pro for unlimited analysis minutes.
+</Tip>
+
+## Reviewing analysis results
+
+After analysis finishes, your extracted metadata is available across several views:
+
+- **Media tab → List View (FileViewer)** — The full spreadsheet of all assets with editable metadata columns (Scene, Take, Roll, Camera, Tags). Low-confidence fields are highlighted for review.
+- **Slate View** — Thumbnail grid of slate images with extracted field values shown beneath each clip. Click any thumbnail to open the Slate Viewer modal with the full-resolution slate crop and per-field confidence scores.
+- **FileViewer context menu → View slate** — Opens the slate evidence image alongside the decision path for a single clip.
+
+From any of these views you can manually edit fields, apply suggestions, or batch-update metadata across multiple clips before export.
+
+## Related pages
+
+<CardGroup cols={3}>
+  <Card title="Slate Detection" icon="camera" href="/analysis/slate-detection">
+    How YOLO and GPT-4o Vision read clapperboard fields and what to do when confidence is low
+  </Card>
+  <Card title="Transcription" icon="microphone" href="/analysis/transcription">
+    Cloud and on-device dialogue transcription, the Dialogue panel, and marker export
+  </Card>
+  <Card title="A/V Sync" icon="film" href="/analysis/av-sync">
+    Timecode and waveform sync, multicam grouping, and the Sync Map View
+  </Card>
+</CardGroup>

@@ -1,0 +1,66 @@
+---
+title: "What is Cocreate? Dailies Automation for Film & TV"
+sidebarTitle: "Introduction"
+description: "Cocreate is a professional desktop app that automates the film and TV post-production dailies pipeline — from camera card to NLE project."
+---
+
+Cocreate is a professional desktop application for film and TV post-production that automates the full dailies workflow — from the moment a camera card arrives through to a ready-to-edit NLE project in the editor's hands. It runs natively on macOS (Apple Silicon), Windows, and Linux, and it bundles everything it needs — FFmpeg, a Python runtime, and AI models — so there is nothing extra to install and no NLE application required to produce native Avid bins, Premiere Pro projects, or DaVinci Resolve projects.
+
+## Who Cocreate is for
+
+Cocreate is designed for the professionals who own the day-one media pipeline:
+
+- **Assistant editors** who build bin structures, sync rushes, and hand off ready-to-cut projects
+- **DIT operators** and **data wranglers** who offload cards on set and need verified, receipted copies without a multi-tool chain
+- **Post facilities** that manage multiple productions and need a repeatable, auditable ingest workflow
+- **Solo operators** running lean productions where one person covers offload through NLE prep
+
+## The full workflow
+
+Cocreate models the dailies pipeline as a connected sequence of stages, each feeding the next:
+
+1. **Card Manager** — Offload camera cards to one or more destinations with selectable checksum verification (xxHash, MD5, SHA-256, and more). Receipts, MHL manifests, and HTML directory snapshots generate automatically. You can also transcode to DNxHR MXF OP-Atom or ProRes during the same copy pass, writing directly into `Avid MediaFiles/MXF` on an edit volume.
+2. **Analysis** — Cocreate's AI pipeline reads every clip: a bundled YOLO clapperboard detector finds slate frames, GPT-4o Vision extracts scene, take, roll, camera, and production metadata, and Deepgram (or a local CoreML model in airgapped mode) transcribes dialogue. All results are stored in the portable `.ccrt` project file.
+3. **Sync** — Timecode sync matches camera and sound rolls by shoot day within a proximity window. Waveform fingerprint sync (Shazam-style spectral peaks + BBC cross-correlation) covers MOS-adjacent workflows or clips with unreliable timecode. Drift is measured and flagged for review.
+4. **Organize & Export** — A drag-and-drop bin structure builder lets you define your NLE folder hierarchy once and save it as a preset. A single export run produces native project files for your chosen NLE with clips, multicam groups, stringout sequences, sync pairs, and metadata columns all populated.
+5. **Dashboard** — Publish a versioned snapshot of any project to the hosted client dashboard at [dashboard.cocreate.so](https://dashboard.cocreate.so). Clients and collaborators see the ingest log, sync status, clip metadata, and transcripts without needing access to your machine.
+
+## Key differentiators
+
+- **No NLE app required for export.** Cocreate writes native `.avb` Avid bins (via pyavb), `.prproj` Premiere Pro projects (via pypremiere), and `.drp` DaVinci Resolve projects (via a byte-level writer) entirely offline. Open the exported project in your NLE and all clips, bins, sequences, and metadata are already there.
+- **AI slate detection at every stage.** The YOLO detector + GPT-4o vision pipeline runs a priority-zone scan of each clip's head, then tail, then a sparse full sweep — with a Deep Slate Scan option for clips that the quick pass misses.
+- **Verified offload with production paperwork.** Every transfer produces a checksum-verified receipt with operator initials, work order, barcode, file counts, and expected-roll validation. MHL generation and HTML snapshots are built in.
+- **Portable projects.** `.ccrt` files are gzipped JSON that contain all analysis state and reference media by path. Move them between machines freely and use the built-in relink flow to reconnect media.
+- **Client dashboard.** Publish live ingest logs and project metadata to a hosted review dashboard — no spreadsheet maintenance required.
+
+## Supported platforms
+
+| Platform | Architecture | Notes |
+|---|---|---|
+| macOS 12+ | Apple Silicon (arm64) | Hardware decode via VideoToolbox; CoreML models on the Apple Neural Engine |
+| Windows 10/11 | x64 | Full feature parity |
+| Linux | x64 | AppImage and .deb packages |
+
+## Supported NLE targets
+
+| NLE | Output format | Notes |
+|---|---|---|
+| Avid Media Composer | `.avb` bins + OP-Atom MXF | Managed clips, AMA bins, sync maps, auto sequences |
+| Adobe Premiere Pro | `.prproj` | Append mode, native proxy attachment, multicam sequences |
+| DaVinci Resolve | `.drp` | Nested bins, stringouts, clip colors, markers |
+| Generic XML | XMEML / FCPXML | Portable interchange for other NLEs |
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="bolt" href="/quickstart">
+    Install Cocreate and run your first analysis in under 10 minutes.
+  </Card>
+  <Card title="Card Manager" icon="hard-drive" href="/card-manager/overview">
+    Set up your first verified offload and ingest workflow.
+  </Card>
+  <Card title="AI Analysis" icon="wand-magic-sparkles" href="/analysis/ai-analysis">
+    Understand how slate detection, transcription, and sync work together.
+  </Card>
+  <Card title="Export Overview" icon="arrow-up-from-bracket" href="/export/overview">
+    Build bin structures and export native NLE projects.
+  </Card>
+</CardGroup>

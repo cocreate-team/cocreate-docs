@@ -1,47 +1,102 @@
 ---
-title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+title: "Get Started with Cocreate in Minutes"
+sidebarTitle: "Quickstart"
+description: "Download and install Cocreate, sign in, create your first project, and run your first complete media analysis and NLE export in under 10 minutes."
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
+This guide walks you through the complete path from a fresh install to a finished, analyzed project ready for NLE export. The first time through takes less than 10 minutes of active work — most of the time is spent waiting for media to copy or analysis to run. If you want to understand any step in more depth, follow the links in each step to the relevant reference page.
 
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
-
-## Prerequisites
-
-Before you begin, you must have:
-
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
-
-## Get started
+<Note>
+  **Plans:** Cocreate offers a **Pro** plan (~$99/mo) with a **14-day free trial** that gives you full access to every feature. The **Permafree** tier is permanently free and lets you analyze up to **2 minutes of media per project** — enough to verify the workflow before you commit. No credit card is required to start either plan.
+</Note>
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
 
-    ```bash
-    npm install your-package
-    ```
-  </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
+  <Step title="Download and install Cocreate">
+    Go to [cocreate.so](https://cocreate.so) and download the installer for your platform.
 
-    ```bash
-    your-cli init
-    ```
-  </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
+    - **macOS (Apple Silicon):** Download the `.dmg`, open it, and drag Cocreate to your Applications folder. On first launch, macOS Gatekeeper may show a security prompt — open **System Settings → Privacy & Security** and click **Open Anyway** to approve it.
+    - **Windows (x64):** Run the NSIS installer and follow the prompts. Cocreate launches automatically when the installer finishes.
 
-    ```bash
-    your-cli start
-    ```
+    Cocreate bundles its own FFmpeg binaries, Python 3.12 runtime, and AI models. You do not need to install anything else.
+
+    <Tip>
+      Need Linux support? AppImage and `.deb` packages are available — see the [Installation](/installation) page for details.
+    </Tip>
   </Step>
+
+  <Step title="Sign in or create an account">
+    When Cocreate opens, you are prompted to sign in. You can use:
+
+    - **Email and password** — enter your email, set a password, and confirm your address from the verification email.
+    - **Continue with Google** — click the Google button. Cocreate opens the authorization page in your system browser and returns automatically via the `cocreate://` deep link.
+
+    If you do not have an account yet, click **Create account** on the sign-in screen. Your 14-day Pro trial starts automatically when you create a new account — no credit card required.
+
+    <Tip>
+      Working offline or on an air-gapped network? See [Airgapped Mode](/account/airgapped-mode) to use Cocreate without a network connection.
+    </Tip>
+  </Step>
+
+  <Step title="Open Card Manager and point it at a media folder">
+    Click **Card Manager** in the main navigation. Card Manager is Cocreate's offload and ingest workspace.
+
+    1. Click **Add Source** and select your camera card or media folder. Cocreate accepts any folder containing camera media — physical cards, network shares, or a local copy.
+    2. Click **Add Destination** and choose where the verified copy should land. Assign a role of **Working** or **Backup** per destination.
+    3. Optionally open **Verification Settings** and choose a checksum method — xxHash is fast and recommended for day-to-day use; SHA-256 is available for archival requirements.
+    4. Optionally enter delivery metadata under **Delivery Info**: operator initials, work order number, and barcode. These values appear on every receipt and in the ingest log.
+
+    <Tip>
+      Turn on **Generate per-roll receipts** in Verification Settings to get a signed, checksum-verified TXT receipt for each roll automatically at the end of the transfer.
+    </Tip>
+  </Step>
+
+  <Step title="Create a project from the transfer">
+    Before you start the transfer, open the **Expected Deliveries** panel and choose **New project (auto-created)** from the project dropdown. Cocreate will create a project and import all transferred media into it automatically when the copy finishes.
+
+    Click **Add to Queue** to start the transfer. Leave Card Manager open until the job card shows a completed status. When the transfer finishes, the new project appears in your project library on the Home screen.
+
+    <Note>
+      You can also create a project manually at any time from the Home screen and import media from any local folder — you do not need to use Card Manager for every workflow.
+    </Note>
+  </Step>
+
+  <Step title="Let analysis run, then review slate metadata">
+    Open the project from the Home screen. Cocreate begins analyzing your media automatically when the project opens for the first time.
+
+    Analysis runs in three phases per clip:
+    - **Metadata extraction** — ffprobe reads timecodes, frame rates, codecs, and embedded camera metadata from filenames and container tags.
+    - **Slate detection** — a YOLO clapperboard detector scans each clip's head and tail, then GPT-4o Vision reads the clapperboard and extracts scene, take, roll, camera, director, and production fields.
+    - **Transcription** — Deepgram transcribes dialogue with per-word timestamps.
+
+    When analysis finishes, switch to **Slate View** (⌘2) to see slate-image thumbnails for every clip, or open **List View** (⌘1) to review the metadata spreadsheet. Click any cell to edit it inline. Right-click a clip to access slate suggestions and correction tools.
+
+    <Tip>
+      If a clip's slate was missed, right-click it and choose **Deep Slate Scan** to run an uncapped full-video sweep.
+    </Tip>
+  </Step>
+
+  <Step title="Export to your NLE">
+    Click the **Export** tab inside the project workspace to open the Bin Structure Builder.
+
+    1. Choose your NLE target from the dropdown: **Avid**, **Premiere Pro**, or **DaVinci Resolve**.
+    2. Load a built-in preset or build your own bin tree by adding static bins and template bins (organized by Shoot Day, Scene, Camera, Roll, or custom fields).
+    3. Choose your export destination folder.
+    4. Click **Export**.
+
+    Cocreate writes the native project file directly — no NLE application needs to be running. Open the exported project in your NLE and all bins, clips, multicam groups, stringout sequences, and metadata columns are ready.
+
+    <Tip>
+      Save your bin structure as a preset (`.ccrtp` file) to reuse it across productions or share it with your team.
+    </Tip>
+  </Step>
+
 </Steps>
 
-<Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
+## Next steps
 
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
-</Tip>
+- [Installation](/installation) — system requirements, platform-specific install steps, and auto-update settings
+- [Account Setup](/account-setup) — plan comparison, operator profile, and airgapped mode
+- [Card Manager Overview](/card-manager/overview) — full offload, verification, and receipt reference
+- [AI Analysis](/analysis/ai-analysis) — how slate detection, transcription, and sync work in detail
+- [Export Overview](/export/overview) — the bin structure builder and all NLE export targets

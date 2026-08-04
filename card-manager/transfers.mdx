@@ -1,0 +1,102 @@
+---
+title: "Configure and Run Verified Media Transfers in Card Manager"
+sidebarTitle: "Transfers"
+description: "Set up multi-destination transfers in Cocreate Card Manager. Add sources, configure backup roles, set operator metadata, and start your offload."
+---
+
+The Transfer view is where you assemble every component of an offload job before sending it to the queue. Cocreate supports copying from multiple source folders to multiple destinations simultaneously, with an independently assigned role for each destination — so your nearline working copy and your redundant backup travel in the same operation rather than as back-to-back manual jobs. Delivery metadata, rename templates, verification settings, and encoding options all live in the same panel, meaning a fully configured ingest takes a few minutes to set up and then runs unattended.
+
+<Steps>
+  <Step title="Open Card Manager">
+    Select **Card Manager** from Cocreate's main navigation bar. The Transfer view opens by default. If you have previous jobs in the queue, they appear here; completed jobs can be dismissed to keep the workspace tidy.
+  </Step>
+
+  <Step title="Add one or more source folders">
+    In the **Sources** section, click the add-folder control and navigate to your camera card or media drive. Select the root folder that contains your roll directories — for example, the top level of a transport drive whose structure looks like:
+
+    ```text
+    TRANSPORT_DRIVE_001/
+    ├── 001_JRYP_280425_FX9_A_01/
+    ├── 002_JRYP_280425_FX9_B_01/
+    └── ...
+    ```
+
+    You can add multiple source folders in one job. Each source is scanned immediately so that Card Manager can calculate a disk-space preflight before you start.
+  </Step>
+
+  <Step title="Add destinations and assign roles">
+    In the **Destinations** section, click **Add Destinations** and select the target folder on your nearline or backup volume.
+
+    For each destination, set its **Role**:
+
+    - **Working** — the primary editorial copy, typically on a nearline volume your edit suite can reach.
+    - **Backup** — a redundant copy on a separate physical drive or volume.
+
+    <Note>
+      Adding a second backup destination is optional but strongly recommended for any show where media cannot be re-acquired. Click **Add Destinations** again after your first destination to configure it.
+    </Note>
+
+    Card Manager tracks per-asset backup coverage so you can see at a glance whether every file has landed on both destinations.
+  </Step>
+
+  <Step title="Fill in delivery information">
+    Click **Delivery info** to open the metadata panel and enter values for the current job:
+
+    | Field | Description |
+    |---|---|
+    | **Operator** | Your initials or full name — appears in the Ingest Log, receipts, and MHL files |
+    | **Work order** | A facility or production reference code, for example `WO-2025-042` |
+    | **Barcode** | A drive or media barcode if your facility uses one |
+
+    These values are written to every roll's ingest history and carry through to any receipts or reports you generate from the job.
+  </Step>
+
+  <Step title="Enable rename during transfer (optional)">
+    If your rolls arrive with ad-hoc or camera-native names and you need them in a production naming convention, turn on **Rename rolls during transfer (wrangle)** and set a **Template**.
+
+    Compose your template by combining static text with any of the following tokens:
+
+    | Token | Inserts |
+    |---|---|
+    | `{seq}` | Auto-incrementing sequence number (e.g. `001`, `002`) |
+    | `{project}` | Project code set in the job configuration |
+    | `{date}` | Shoot date derived from the source media (YYYYMMDD) |
+    | `{camtype}` | Camera type (e.g. `FX9`, `MAVICMINI`) |
+    | `{camletter}` | Camera letter identifier (e.g. `A`, `B`) |
+    | `{rollindex}` | Per-camera roll index within the shoot day |
+
+    For example, the template `{seq:3}_{project}_{date}_{camtype}_{camletter}_{rollindex:2}` produces names like `001_JRYP_280425_FX9_A_01`.
+
+    A live preview updates as you type so you can confirm the output before committing.
+
+    <Tip>
+      If you want to test your rename template against actual roll names without running a full transfer, check the duplicate-detection dialog that appears when Cocreate finds two rolls that would resolve to the same output name.
+    </Tip>
+  </Step>
+
+  <Step title="Add to queue and monitor progress">
+    When your sources, destinations, delivery info, and any optional settings are in place, click **Add to Queue** at the bottom of the configuration panel. The job enters the transfer queue and begins running immediately unless another job is active.
+
+    The progress display shows:
+
+    - Per-file copy progress and current transfer speed
+    - Verification status as each file is checked
+    - Encoding progress if transcode-on-offload is enabled
+    - An overall job progress bar with estimated time remaining
+
+    You can queue additional jobs while one is running. Each job starts automatically when the one ahead of it completes.
+
+    <Tip>
+      Use the built-in **Drive Speed Tester** before queuing large transfers to benchmark your source and destination volumes. Access it from the Card Manager toolbar — it runs a `dd`-based read/write test and shows live throughput with a speed-over-time graph, so you can catch a slow drive before it extends your transfer window.
+    </Tip>
+  </Step>
+
+  <Step title="Review the completed job">
+    When the transfer finishes, the job card updates to show the final status. From here you can:
+
+    - Click **Reports & receipts** to open the per-transfer TXT log, JSON checksum manifest, and any MHL or HTML snapshot files generated for the job.
+    - Click the auto-created project to open it directly in Cocreate's project workspace — all ingested rolls are already loaded and ready for analysis.
+
+    If the job contains any verification failures, the job card flags them and the Reports view provides per-file diagnostics with the exact error and the relevant log excerpt.
+  </Step>
+</Steps>

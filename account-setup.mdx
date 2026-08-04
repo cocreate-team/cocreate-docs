@@ -1,0 +1,97 @@
+---
+title: "Create Your Cocreate Account and Choose a Plan"
+sidebarTitle: "Account Setup"
+description: "Sign up for Cocreate using email or Google OAuth, compare the Pro and Permafree plans, set your operator initials, and configure airgapped mode."
+---
+
+Before you can analyze media or export projects, you need a Cocreate account. Accounts are free to create, and every new account starts with a 14-day Pro trial so you can evaluate the full feature set before choosing a plan. This page covers creating an account, understanding the two plans, and configuring your operator profile — the initials and metadata that appear on transfer receipts, ingest logs, and production paperwork.
+
+## Creating an account
+
+Cocreate supports two sign-in methods. Both create the same type of account; the choice is a matter of preference.
+
+### Email and password
+
+1. Open Cocreate and click **Create account** on the sign-in screen.
+2. Enter your email address and choose a password.
+3. Check your inbox for a verification email from Cocreate and click the confirmation link.
+4. Return to Cocreate — you are signed in and your 14-day Pro trial begins automatically.
+
+To reset a forgotten password, click **Forgot password** on the sign-in screen. Cocreate sends a reset link to your registered email address.
+
+### Google OAuth
+
+1. Open Cocreate and click **Continue with Google**.
+2. Cocreate opens the Google authorization page in your **system browser** (not an in-app webview).
+3. Sign in to your Google account and grant the requested permissions.
+4. Your browser redirects through the `cocreate://` deep link back to Cocreate, completing the sign-in automatically.
+
+No password is set or stored on your Cocreate account when you sign in with Google. If you later need to access Cocreate without Google, use the **Forgot password** flow to set a standalone password.
+
+## Plan comparison
+
+<CardGroup cols={2}>
+  <Card title="Pro" icon="star">
+    **~$99 / month**
+
+    - Unlimited analysis minutes
+    - Full AI pipeline: YOLO + GPT-4o slate detection, Deepgram transcription, global corrections
+    - All export targets: Avid, Premiere Pro, DaVinci Resolve, XMEML/FCPXML
+    - Dashboard publishing and client collaboration
+    - Priority support
+    - **14-day free trial** — no credit card required at signup
+  </Card>
+  <Card title="Permafree" icon="infinity">
+    **Free, forever**
+
+    - **2 analysis-minutes** per project
+    - YOLO + GPT-4o slate detection and transcription (within the minute limit)
+    - All export targets available
+    - Dashboard publishing available
+    - No trial expiry — the free tier never goes away
+    - Ideal for evaluating the workflow on short-form projects
+  </Card>
+</CardGroup>
+
+**Analysis minutes** are metered by the total duration of media you send through the AI analysis pipeline (slate detection + transcription) in a single project. Importing and organizing media, editing metadata manually, and exporting NLE projects do not consume analysis minutes.
+
+When your Pro trial ends, your account converts to Permafree automatically — you keep all your projects and exported files, and the 2-minute limit applies to new analysis runs from that point forward.
+
+To subscribe or manage your billing, open **Settings → Subscription** inside Cocreate, or visit the client dashboard at [dashboard.cocreate.so](https://dashboard.cocreate.so). Billing is handled through Stripe; Cocreate never stores your payment card details.
+
+## Setting your operator profile
+
+Your operator initials appear on transfer receipts, MHL manifests, ingest log entries, and any production paperwork Cocreate generates. Set them before you run your first transfer.
+
+1. Open **Settings** from the Cocreate menu bar (macOS: **Cocreate → Settings**; Windows/Linux: the gear icon in the navigation).
+2. Go to the **General** tab.
+3. Enter your **Operator initials** — typically two or three uppercase letters (for example, `AE` or `JRS`).
+4. Click **Save**.
+
+You can update your operator initials at any time. Changes apply to all new transfers and log entries from that point; they do not retroactively update existing receipts.
+
+## Signing out and switching accounts
+
+To sign out of Cocreate:
+
+1. Open **Settings → Account**.
+2. Click **Sign out**.
+
+Cocreate clears your session and returns to the sign-in screen. Your project files (`.ccrt`) remain on disk and are not deleted when you sign out. When you sign back in — or sign in with a different account — you can reopen projects from the Home screen normally.
+
+<Note>
+  If you share a machine with another operator, each person should sign in with their own account so that receipts and ingest log entries carry the correct operator attribution.
+</Note>
+
+## Airgapped mode
+
+If you work on an air-gapped network or a set with no internet access, Cocreate can run entirely offline. In airgapped mode:
+
+- Your session is restored from an encrypted local cache — no network authentication required.
+- Cloud AI services (Deepgram transcription, GPT-4o slate reads) are disabled.
+- Slate detection falls back to the bundled YOLO model only.
+- On macOS, local transcription uses the bundled Parakeet CoreML model on the Apple Neural Engine.
+- Usage is buffered locally and reconciled with the server when connectivity is restored.
+- Billing and subscription UI are hidden.
+
+No account or credentials are required to use airgapped mode — the cached session is sufficient. For full setup instructions, see [Airgapped Mode](/account/airgapped-mode).

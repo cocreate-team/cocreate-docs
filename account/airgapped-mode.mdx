@@ -1,0 +1,76 @@
+---
+title: "Run Cocreate Offline with Airgapped Mode"
+sidebarTitle: "Airgapped Mode"
+description: "Enable Cocreate's airgapped mode for zero-network workflows — on-device transcription, local analysis, and offline project management on secure sets."
+---
+
+Airgapped mode puts Cocreate into a fully offline operating state: every network socket is closed, all cloud AI calls are suppressed, and the app runs entirely on local resources. It is designed for productions where internet access is unavailable, prohibited, or a security risk — including government and military shoots, studio facilities with strict network policies, and remote locations where connectivity simply isn't reliable. Because airgapped mode is a first-class feature rather than a graceful-degradation fallback, the core dailies workflow remains intact: you can ingest, analyse slates, transcribe dialogue on-device, sync camera and sound, export to your NLE, and generate reports without a single byte leaving the machine.
+
+## When to Use Airgapped Mode
+
+Enable airgapped mode in any of these situations:
+
+- **Secure government or military productions** — facilities that prohibit outbound traffic from workstations handling production media
+- **Studio networks with firewall restrictions** — environments where the workstation cannot reach external APIs regardless of your settings
+- **Remote or onset locations without internet** — locations where mobile data is unavailable, unreliable, or too slow for cloud transcription
+- **Privacy-sensitive projects** — productions where stakeholders require that no footage metadata, dialogue, or slate images leave the local network
+
+## How to Enable Airgapped Mode
+
+<Steps>
+  <Step title="Open Settings">
+    In the Cocreate menu bar, press **Cocreate → Settings**, or use the keyboard shortcut if one is configured.
+  </Step>
+  <Step title="Navigate to General">
+    Select the **General** tab in the Settings panel.
+  </Step>
+  <Step title="Toggle Airgapped mode on">
+    Locate the **Airgapped mode** toggle and switch it on. Cocreate immediately closes all active network connections and disables the cloud-dependent features listed below. No restart is required.
+  </Step>
+</Steps>
+
+To return to normal online operation, open **Settings → General** and switch the toggle off. Cocreate reconnects, syncs any buffered usage data, and re-enables cloud features automatically.
+
+## What Still Works in Airgapped Mode
+
+The full dailies pipeline remains operational offline:
+
+| Feature | Airgapped behaviour |
+|---------|-------------------|
+| **Card Manager (ingest and offload)** | Fully available — transfers, checksums, receipts, ingest log, expected-roll validation |
+| **Slate detection** | Uses the bundled YOLO clapperboard model locally via ONNXRuntime — no GPT-4o Vision call |
+| **On-device transcription** | Parakeet TDT 0.6B v3 (CoreML) runs on the Apple Neural Engine — produces the same word-level timestamps as cloud transcription |
+| **Audio/video sync** | Timecode sync and waveform fingerprint sync both work fully offline |
+| **Playback and review** | Native hardware decode, J/K/L shuttle, multicam viewer, LUT overlay — all local |
+| **NLE export** | Avid `.avb`, Premiere `.prproj`, Resolve `.drp`, XMEML — all generated offline |
+| **Reports and receipts** | PDF, CSV, and HTML reports generated locally |
+| **Project management** | Create, open, save, export, and relink `.ccrt` files normally |
+
+## What Requires Network Access
+
+The following features are unavailable while airgapped mode is active:
+
+| Feature | Reason |
+|---------|--------|
+| **Cloud transcription (Deepgram Nova-3)** | Requires outbound connection to Deepgram's API |
+| **AI-assisted slate OCR (GPT-4o Vision)** | Requires outbound connection to OpenAI's API |
+| **Dashboard publishing** | Requires connection to dashboard.cocreate.so |
+| **Subscription sync** | Stripe and Supabase billing checks are suspended |
+| **Auto-updates** | Update checks and downloads are suppressed |
+| **In-app notices** | Server-broadcast messages are not fetched |
+
+<Note>
+GPT-4o Vision provides the highest slate-reading accuracy on difficult boards (low light, partial occlusion, non-standard formats). In airgapped mode, Cocreate falls back to the local YOLO detector with deterministic OCR. For most production slates the results are equivalent; for unusually challenging boards, plan a cloud re-analysis pass when connectivity is restored.
+</Note>
+
+## On-Device Transcription with Parakeet
+
+When airgapped mode is on, Cocreate automatically routes all transcription jobs to **Parakeet TDT 0.6B v3** — a speech-recognition model bundled with the app and converted to CoreML. Parakeet runs on the Apple Neural Engine, which means it does not compete with the CPU cores handling media decode and analysis. It produces Deepgram-compatible JSON output with per-word timestamps and confidence scores, so every downstream feature that consumes transcripts — dialogue search, transcript panel, dialogue markers in NLE exports — works identically whether the transcript came from Deepgram or Parakeet.
+
+## Usage Buffering
+
+Cocreate meters analysis usage even when offline. While airgapped mode is active, every analysis minute consumed is recorded to an encrypted local buffer on disk. When you next disable airgapped mode and connectivity is restored, Cocreate syncs the buffered usage events to the billing server in the background. This means your usage accounting stays accurate across airgapped sessions without requiring any manual action on your part.
+
+<Note>
+Airgapped mode is available on both the **Pro** and **Permafree** plans. Permafree's 2-analysis-minute cap still applies during airgapped sessions — usage is tracked locally and enforced when the buffer syncs.
+</Note>

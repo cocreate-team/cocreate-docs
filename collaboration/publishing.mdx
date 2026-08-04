@@ -1,0 +1,75 @@
+---
+title: "Publish a Project to the Cocreate Dashboard"
+sidebarTitle: "Publishing"
+description: "Push a versioned snapshot of your Cocreate project to the dashboard in one click — assets, slates, transcripts, sync status, and ingest log included."
+---
+
+Publishing sends a complete, versioned snapshot of your open project to [dashboard.cocreate.so](https://dashboard.cocreate.so), where clients and remote team members can review it in their browser. A single publish operation captures assets with their ffprobe metadata, slate fields, transcript text, generated thumbnails, sync pairs, ingest log events, and any receipt documents you have attached — so the dashboard always reflects the full state of the project at the moment you pressed **Publish**. You can publish as many times as you like; each publish creates a new version in the project's history while clients always land on the most recent one.
+
+<Note>
+The **Publish** button is only visible when your Cocreate account is a member of at least one organisation. If you do not see it in the project header, confirm your account membership in the dashboard's organisation settings before continuing.
+</Note>
+
+## Publishing a Project
+
+<Steps>
+  <Step title="Open the project in Cocreate">
+    Open the project you want to share from the Cocreate home screen. Wait for any in-progress analysis or sync jobs to finish so that the snapshot captures complete data.
+  </Step>
+  <Step title="Click Publish in the project header">
+    In the project header bar at the top of the window, press **Publish**. The Publish dialog opens.
+  </Step>
+  <Step title="Select your organisation">
+    In the **Publish to dashboard** dialog, use the organisation picker to choose the org you want to publish under. If you belong to multiple organisations, select the one whose members should see this project.
+
+    <Tip>
+      Make sure you select the correct organisation before publishing. Publishing to the wrong org makes the project visible to that org's members immediately.
+    </Tip>
+  </Step>
+  <Step title="Enter a client-facing project name">
+    Type a descriptive name in the **Project name** field. This is the name clients will see on the dashboard — it does not have to match the project's internal name in Cocreate. Use something meaningful to the client, such as the production title and shoot date.
+  </Step>
+  <Step title="Configure publish options and click Publish">
+    Review any additional options — such as the **Hosted review media** toggle (see below) — then press **Publish**. Cocreate assembles the snapshot and uploads it to the dashboard. A progress indicator appears in the dialog while the upload is in progress.
+  </Step>
+  <Step title="Open the Published menu">
+    When the upload completes, the project header button changes from **Publish** to **Published**. Press **Published** to open its dropdown menu.
+  </Step>
+  <Step title="Click Open in dashboard">
+    In the dropdown, press **Open in dashboard**. Your default browser opens directly to the project's dashboard page.
+  </Step>
+  <Step title="Navigate to Ingest Log to verify the published data">
+    In the dashboard, press **Ingest Log** in the project navigation. Confirm that the rolls are grouped correctly by shoot day, that clip counts and durations match what you see in the desktop app, and that backup and sync statuses are accurate. If receipt documents were attached, verify that they appear as downloadable attachments alongside the relevant rolls.
+  </Step>
+</Steps>
+
+## What Gets Published
+
+A published snapshot includes:
+
+| Item | Detail |
+|------|--------|
+| **Assets** | All media files in the project with ffprobe metadata (duration, frame rate, resolution, codec) |
+| **Slate fields** | Scene, setup, take, roll, camera, day, director, operator, and any populated custom fields |
+| **Transcripts** | Full dialogue transcriptions with per-word timecodes |
+| **Thumbnails** | Representative frames generated during analysis |
+| **Sync pairs** | Camera-to-audio matches with offset, method, and confidence |
+| **Ingest log events** | Drive scans, copy steps, verification results, wrangle entries, and custom log entries |
+| **Receipt documents** | PDF and HTML receipts attached to Card Manager transfers |
+
+## Re-Publishing and Version History
+
+Every time you press **Publish**, the dashboard stores a new versioned snapshot. Clients always see the latest version automatically, but every previous version remains accessible in the version history panel on the dashboard. This means you can publish after the morning transfer, publish again after the afternoon sync pass, and clients can compare what changed between the two versions. There is no limit to how many times you can publish a project.
+
+## Hosted Review Media
+
+The **Hosted review media** toggle in the Publish dialog controls whether clients can play back clips frame-accurately in the browser.
+
+- **Off (default):** Clients see metadata, thumbnails, the ingest log, and transcripts. Publish is fast.
+- **On:** Cocreate uploads a browser-compatible representation of the media alongside the snapshot. Clients can scrub clips, follow along with transcripts, and leave timecode-anchored comments directly on frames.
+
+Enable hosted review media when the client needs to approve takes or review performances remotely. Leave it off for ingest-status-only workflows where a fast publish matters more than in-browser playback.
+
+## Timecode-Anchored Comments
+
+Comments created in the Cocreate desktop player travel with the project. When you publish, every timecode-anchored comment is included in the snapshot. Comments left by dashboard reviewers are visible to you in the desktop app after a re-publish or sync, and they persist across both `.ccrt` transfers and new dashboard snapshots — so the full review conversation stays intact no matter how many times the project moves between machines or versions.

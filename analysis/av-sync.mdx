@@ -1,0 +1,129 @@
+---
+title: "Sync Camera and Sound in Cocreate Using TC and Waveform"
+sidebarTitle: "A/V Sync"
+description: "Cocreate matches camera footage to production sound via timecode and waveform fingerprinting. Review uncertain sync pairs and export sync maps to your NLE."
+---
+
+On a typical production day, sound is recorded separately from picture — a Sound Devices or Zaxcom recorder runs independently of two or three camera bodies — and the first task of post-production is to find which audio roll belongs to which camera file, calculate the offset between them, and lock them together. Cocreate automates this entire matching process. For most shoots it requires no manual intervention: Cocreate reads embedded timecode from every camera file and every audio roll, identifies overlapping timecode intervals between them, and builds sync pairs with frame-accurate offsets before you open a single clip in the player. When timecode alone isn't enough — rolled-over TC, a jammed clock that didn't hold, a second-unit camera that ran independently — Cocreate falls back to waveform fingerprinting, using the acoustic content of the audio itself to find a match. The result feeds directly into NLE export: your Avid or Premiere project receives properly synced subclips, multicam groups, and sync-map sequences without a separate sync step.
+
+## Sync methods
+
+Cocreate uses two phases of sync matching, applied in order:
+
+### Phase 1: Timecode sync
+
+Timecode sync is the fastest and most reliable method. Cocreate reads timecode from every camera and audio file — from BWF BEXT `time_reference` fields, iXML metadata, and MXF KLV-level timecode blocks — and then, for each shoot day, looks for video/audio pairs whose timecode intervals overlap.
+
+Matching is fps-aware and handles NTSC fractional frame rates (23.976, 29.97, 59.94) correctly. When multiple audio rolls could match the same camera clip, Cocreate uses a greedy closest-first algorithm that picks the best match by timecode proximity.
+
+Timecode sync is the method used for the vast majority of clips on a properly jammed production. The resulting sync pairs carry an offset in milliseconds, a method label of `timecode`, and a confidence score.
+
+### Phase 2: Waveform sync
+
+For clips where timecode doesn't produce a confident match — mismatched frame rates, unjammed sound, rolled-over counters, or timecode that simply wasn't recorded — Cocreate runs waveform sync. This method uses acoustic fingerprinting to find the same sound in two different files:
+
+1. **Spectral-peak fingerprinting** — Cocreate generates a Shazam-style fingerprint from both the camera audio track and the sound roll, grouping clips by their acoustic signature.
+2. **BBC cross-correlation** — Candidate pairs are verified and their precise offset is computed using cross-correlation of the audio waveform, the same method used by the BBC's production tools.
+
+Waveform sync runs in a separate subprocess (isolated from the main process to avoid BLAS library conflicts on Apple Silicon) and produces offsets accurate to the sample level.
+
+<Note>
+  A third phase — **Visual clap sync**, which detects the slate-close frame visually and matches it to the audio transient — is in development and will be available in a future release. This phase will be particularly useful for MOS-adjacent workflows where audio callouts are absent.
+</Note>
+
+## Enabling sync
+
+Sync is configured as a toggle in the **Process** panel, which you access by pressing **Process settings** next to the **Process** button in the Import Media tab.
+
+| Toggle | When to enable |
+|---|---|
+| **By timecode** | Almost always — enable for any production with jammed timecode |
+| **By waveform** | Enable when some clips lack matching TC, or as a verification pass alongside timecode sync |
+
+Turn on the toggles you need, then press **Process**. Cocreate runs sync automatically after slate extraction and transcription complete for each shoot day's clips. You can also trigger sync independently on already-imported clips by right-clicking a selection and choosing **Resync selected** or **Resync all**.
+
+## Multicam grouping
+
+After sync pairs are established, Cocreate groups clips into **multicam groups** — sets of camera angles and audio rolls that cover the same take. Grouping uses two strategies applied together:
+
+1. **Scene + take + timecode overlap** — clips sharing the same detected scene/take that also have overlapping timecode intervals are grouped together.
+2. **Sync-pair connectivity with audio anchors** — clips connected through a shared audio roll (the common anchor) are linked into the same group even if their timecode intervals don't directly overlap.
+
+Multicam groups feed every downstream feature that works across angles: the multicam viewer in the player, multicam clip generation in Avid and Premiere exports, and group subclip creation.
+
+## Sync Map View
+
+The **Sync Map View** (⌘4) gives you a visual timeline of all your synced clips aligned by source timecode. Open it from the view selector in the Media tab.
+
+The Sync Map shows:
+
+- Camera and sound clips as colored bars on horizontal tracks, one track per roll
+- Source timecode along the horizontal axis so you can see where clips overlap across shoot days
+- Metadata grouping overlays labeling scene/take ranges
+- A minimap for navigating long shoot days
+- A gap-collapse threshold control to hide dead time between takes
+
+Use the Sync Map to verify that your cameras and sound rolls are correctly paired and aligned before export. Each bar is clickable — clicking a clip selects it in the FileViewer and opens it in the player.
+
+## Reviewing dubious pairs
+
+When Cocreate is uncertain about a sync match — low-confidence waveform correlation, timecode overlap that could fit multiple audio rolls, or drift above a threshold — it flags the pair as **dubious** and presents it for your review.
+
+After processing, a **Dubious Pairs** review modal appears automatically if uncertain matches exist. For each flagged pair you see:
+
+- A split player showing the camera clip and the proposed audio roll playing simultaneously
+- The computed offset and confidence score
+- The match method used (timecode or waveform)
+- Drift measurements if available
+
+For each pair, choose **Keep** to accept the match or **Discard** to reject it. Discarded pairs leave both clips unsynced so you can manually assign them later.
+
+You can also open the dubious-pair review at any time from the **Process** panel by pressing **Review uncertain matches**.
+
+## Drone and zero-TC clips
+
+Clips that start at `00:00:00:00` — typically drone footage or cameras that weren't jammed — cannot be matched by timecode. Cocreate leaves these clips unsynced by default, which is the expected and correct behavior. They appear in the Sync Map as unanchored bars and are labeled with a zero-TC indicator in the **TC Type** column in the FileViewer.
+
+For drone clips that do share audio with the main sound roll (for example, a drone that was recording while the sound mixer was also running), you can run waveform sync on those clips specifically by selecting them in the FileViewer and choosing **Resync selected → By waveform**.
+
+## Sync status columns
+
+In the **FileViewer** spreadsheet, two columns show sync status for each clip:
+
+| Column | What it shows |
+|---|---|
+| **Synced With** | The filename of the matched audio roll (or camera, for audio clips), blank if unsynced |
+| **Sync status** | A color indicator: green = synced, amber = dubious/needs review, grey = unsynced |
+
+Enable these columns from the column picker (the column icon in the FileViewer header) if they aren't visible by default.
+
+## Drift measurement
+
+For long takes, genlock drift between the camera and the sound recorder can cause audio that was in sync at the slate to drift out of sync by the end of the clip. Cocreate measures this drift by running segmented correlation probes across the length of each sync pair and reports:
+
+- **Drift (ms/min)** — the rate of drift in milliseconds per minute of recording
+- A dubious-pair flag if drift exceeds the acceptable threshold for the clip duration
+
+The drift value is visible in the sync pair details (accessible from **View slate** in the FileViewer context menu) and is included in the **Media Report** CSV export under the **Drift** column.
+
+## Sync output and NLE export
+
+Sync results feed directly into every NLE export target. When you export to Avid or Premiere:
+
+- **Synced subclips** — each sync pair produces a subclip with the audio track linked to the correct external sound file at the correct offset
+- **Multicam groups** — all angles of the same take are packaged as a multicam clip with angle selectors
+- **Sync-map sequences** — a per-day timeline sequence places every camera and sound clip at its source timecode, producing the day's sync map as an editable sequence in the NLE
+- **Stringout sequences** — clips appear with their synced audio already aligned
+
+See [Avid Export](/export/avid) and [Premiere Export](/export/premiere) for details on sync-specific export settings.
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="AI Analysis" icon="wand-magic-sparkles" href="/analysis/ai-analysis">
+    How to trigger analysis and enable the sync toggle before processing
+  </Card>
+  <Card title="Slate Detection" icon="camera" href="/analysis/slate-detection">
+    How slate metadata (scene, take) is used as the basis for multicam grouping
+  </Card>
+</CardGroup>

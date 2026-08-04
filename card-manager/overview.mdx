@@ -1,0 +1,52 @@
+---
+title: "Card Manager: Verified Media Offload and Ingest Workspace"
+sidebarTitle: "Overview"
+description: "Card Manager is Cocreate's media offload workspace. Back up camera cards with checksum verification, transcode on the fly, and build an ingest trail."
+---
+
+Card Manager is Cocreate's dedicated data-wrangling workspace — the place where raw camera media becomes a verified, receipt-backed ingest ready for editorial. Rather than juggling separate tools for copying, checksumming, transcoding, and logging, you do everything in a single pass: add your source cards, configure one or more backup destinations, choose a verification method, optionally generate proxies on the fly, and hit **Add to Queue**. By the time the progress bar reaches 100%, you have a nearline backup, an edit-ready proxy volume, a set of signed receipts, and a running audit trail — all without opening another application.
+
+## The three views
+
+Card Manager is organised into three views, each covering a distinct part of the ingest workflow:
+
+| View | What you do here |
+|---|---|
+| **Transfer** | Add sources and destinations, set verification and encoding options, configure operator metadata, and queue jobs |
+| **Reports** | Review per-transfer receipts, checksum manifests, MHL files, and HTML directory snapshots |
+| **Ingest Log** | Browse and filter the per-step operational audit trail; export as CSV |
+
+## Core workflow
+
+Every ingest follows the same sequence:
+
+1. **Add a source** — point Card Manager at a camera card, a media drive, or any folder containing rolls.
+2. **Configure destinations** — add a working destination and an optional backup destination. Assign a role to each: **Working** or **Backup**.
+3. **Set verification** — choose a checksum method (CRC32, MD5, xxHash, SHA-256, SHA-512, or byte-compare) that matches your facility's requirements.
+4. **Configure encoding** (optional) — enable transcode-on-offload to generate DNxHR, ProRes, or H.264 proxies as the copy runs.
+5. **Add to queue and run** — Card Manager copies, verifies, and encodes in one pass while writing every step to the Ingest Log.
+6. **Review reports** — open the completed job's receipts, checksum manifest, and MHL file directly from the Transfer view.
+
+<Tip>
+When a transfer completes, Card Manager automatically creates a Cocreate project populated with the ingested rolls. You can open it immediately from the completed job card — no separate import step required.
+</Tip>
+
+## Explore Card Manager
+
+<CardGroup cols={2}>
+  <Card title="Transfers" icon="arrow-right-arrow-left" href="/card-manager/transfers">
+    Configure sources, destinations, operator metadata, and rename templates, then queue and monitor your offload.
+  </Card>
+  <Card title="Verification" icon="shield-check" href="/card-manager/verification">
+    Choose a checksum method, understand the speed and security tradeoffs, and export signed receipts and MHL files.
+  </Card>
+  <Card title="Transcode on Offload" icon="film" href="/card-manager/transcode-on-offload">
+    Generate Avid-native DNxHR proxies or ProRes and H.264 edit media during the copy — one pass, not two.
+  </Card>
+  <Card title="Expected Deliveries" icon="clipboard-list" href="/card-manager/expected-deliveries">
+    Validate a delivery against an expected-roll manifest and catch missing rolls, extras, and clip-count mismatches before ingest begins.
+  </Card>
+  <Card title="Ingest Log" icon="scroll" href="/card-manager/ingest-log">
+    Browse the per-step audit trail, filter by operator or roll, and export a CSV for facility handoff.
+  </Card>
+</CardGroup>

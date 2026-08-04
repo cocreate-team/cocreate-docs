@@ -1,0 +1,70 @@
+---
+title: "Share Dailies with Clients Using the Cocreate Dashboard"
+sidebarTitle: "Dashboard"
+description: "Publish your Cocreate projects to dashboard.cocreate.so to give clients and teams a live ingest log, sync status, and media review portal."
+---
+
+The Cocreate Dashboard is a web portal at [dashboard.cocreate.so](https://dashboard.cocreate.so) that gives clients, producers, and remote team members a live view of your production's ingest state — without requiring them to install Cocreate or access your local storage. When you publish a project from the desktop app, the dashboard receives a versioned snapshot containing your assets, slate fields, transcripts, thumbnails, timecode-anchored comments, and the full ingest log. Clients can open the portal in any browser, review what has been delivered and verified, leave comments tied to specific timecodes, and download the ingest log as a CSV — all without touching your working media.
+
+## What the Dashboard Shows
+
+Once you publish, the dashboard surfaces everything a client or supervising producer needs to assess the day's work at a glance.
+
+### Ingest Log
+
+The Ingest Log is the centrepiece of the dashboard. Rolls are grouped by shoot day so a client can immediately see which days have arrived. For each roll the log displays:
+
+- **Clip count** — total number of clips received in that roll
+- **Duration and size** — aggregate running time and storage footprint
+- **First and last clip** — file names bookending the roll
+- **First and last timecode** — source timecodes from the first and last clip
+- **Backup status** — whether a verified backup copy exists
+- **Sync status** — whether camera and audio have been matched
+
+Select any roll to expand the **media-report details**: sync reference track, time-of-day vs. record-run timecode, genlock assessment, drift reading, auxiliary timecode, and audio presence. When you need to share the log with a finishing facility or a DIT coordinator offline, press **Export CSV** to download the full ingest log as a spreadsheet. If you attached receipt documents to the transfer in Card Manager, those files appear alongside the relevant rolls as downloadable attachments.
+
+### Assets, Slates, and Transcripts
+
+The dashboard also exposes the project's full asset list with slate fields (scene, take, roll, camera, day, director, operator), generated thumbnails, and transcriptions. Clients can search dialogue and jump to specific takes without waiting for you to share a PDF report.
+
+### Comments
+
+Every comment you create in the Cocreate desktop player is timecode-anchored. Those anchors survive both `.ccrt` project transfers and dashboard publishing — so a note left on frame 01:02:34:12 in the desktop app appears at exactly the same frame on the dashboard, and vice versa. Comments added by dashboard reviewers travel back into the project when you pull an updated snapshot, keeping the conversation in one place regardless of where it started.
+
+## Organisation Roles
+
+Access to a dashboard project is governed by your organisation's membership roles. Every user belongs to one of four roles:
+
+| Role | What they can do |
+|------|-----------------|
+| **Owner** | Full control: manage org settings, billing, members, and all projects |
+| **Admin** | Manage members and projects; publish and delete snapshots |
+| **Member** | Publish projects, view all org projects, add comments |
+| **Viewer** | Read-only access: browse assets, ingest log, and comments; cannot publish |
+
+Assign the **Viewer** role to clients and executives who need visibility but should not modify project data. Use **Member** for on-set and near-set crew who need to publish from their own Cocreate installs. Reserve **Admin** and **Owner** for department heads and facility leads.
+
+## Version History
+
+Every time you press **Publish** in the desktop app, the dashboard stores a new versioned snapshot of the project. Clients always see the most recent version, but every prior version remains accessible in the version history panel. This lets you demonstrate what changed between morning rushes and the end-of-day delivery — for example, showing that sync pairs were added after the afternoon session.
+
+## Hosted Review Media
+
+By default, the dashboard shows metadata, thumbnails, and the ingest log. If you want clients to play back media frame-accurately in the browser, enable the **Hosted review media** toggle in the Publish dialog before you publish. When this option is on, Cocreate uploads a browser-compatible representation of the selected media alongside the project snapshot. Clients can then scrub through clips, read dialogue transcripts in sync, and leave timecode-anchored comments directly against the frames — with no download required.
+
+<Note>
+Hosted review media increases upload size and publish time. For ingest-log-only workflows, leave the toggle off to publish in seconds.
+</Note>
+
+## Accessing the Dashboard
+
+Open [dashboard.cocreate.so](https://dashboard.cocreate.so) in any modern browser. Sign in with the same Cocreate credentials you use in the desktop app. The dashboard lists every project published to organisations you belong to.
+
+To grant a client access:
+
+1. In your organisation settings on the dashboard, press **Invite member**.
+2. Enter the client's email address and select the **Viewer** role.
+3. The client receives an invitation email and sets up a Cocreate account.
+4. Once they accept, they can see every project published to that organisation.
+
+Clients do not need to install the Cocreate desktop app — the dashboard is entirely browser-based.

@@ -1,0 +1,82 @@
+---
+title: "Export DaVinci Resolve Projects (.drp) from Cocreate"
+sidebarTitle: "DaVinci Resolve"
+description: "Cocreate generates native DaVinci Resolve .drp project files with nested bins, calibrated clip colors, markers, and stringout timelines."
+---
+
+Cocreate writes DaVinci Resolve project files at the byte level using a dedicated `.drp` format writer. A `.drp` file is a ZIP archive containing Qt-serialized XML and protobuf blobs — the exact binary format Resolve reads natively. Cocreate assembles this archive from scratch, without Resolve running, producing a project file that opens cleanly in DaVinci Resolve 19. The result is a fully structured Media Pool with nested bins, calibrated clip colors, markers, and stringout timelines ready for the colorist or editor the moment they import the project.
+
+## How .drp Export Works
+
+When you press **Export** with the Resolve target selected, Cocreate's `.drp` writer:
+
+1. Resolves all template bins in the Bin Structure Builder against your project's media, expanding one bin per roll, day, or other organize-by value.
+2. Writes each clip's timecode, frame rate, container metadata, scene, take, and camera fields into the correct Qt-serialized XML structures.
+3. Serializes clip color assignments and markers into protobuf blobs embedded in the archive.
+4. Assembles and ZIPs the complete archive into a single `.drp` file at your chosen export destination.
+
+The whole process runs offline — no Resolve process, no scripting API, no need for the application to be installed.
+
+## Nested Bins in the Media Pool
+
+The Bin Structure Builder's tree maps directly to Resolve's Media Pool hierarchy. Static bins appear as fixed-name bins; template bins expand per roll, day, scene, or camera to produce one bin per value. Nest template bins inside static bins to create structures like `RUSHES → Day 1 → A001` or `SYNC MAPS → 2025-04-28`.
+
+Bins at any depth are fully supported — Resolve imposes no practical nesting limit in its Media Pool, and Cocreate's writer handles arbitrary depth.
+
+## Clip Colors
+
+Cocreate's 16-color label palette maps to DaVinci Resolve's clip color system. When you assign a color label to a clip in Cocreate — whether manually, through a rule-based color policy, or via metadata — that color is calibrated and written as a Resolve clip color in the `.drp` file.
+
+Color assignments appear in Resolve's Media Pool clip list and bin thumbnails immediately on import, giving the colorist a color-coded overview of the rushes without any manual tagging in Resolve.
+
+To configure which Cocreate colors map to which Resolve colors, open the **Clip Color** settings on a clip element in the Bin Structure Builder and adjust the mapping table.
+
+## Markers
+
+Transcription-derived dialogue markers and any manually created markers in Cocreate export as **Resolve clip markers**. Each marker carries its timecode position and text label. Markers appear on clips in the Media Pool and on the timeline ruler when clips are placed in a timeline, making it straightforward to jump to logged moments directly in Resolve.
+
+Enable **Export Markers** on a clip element in the Bin Structure Builder's settings to include markers in the export.
+
+## Stringout Timelines
+
+Add a **Stringout** element inside a template bin to generate linear timelines in the exported Resolve project. Each stringout timeline places clips in source timecode order, butt-cut, with correct gap math so any timecode discontinuities are represented as silence or black frames rather than timeline gaps.
+
+Configure the scope of each stringout element:
+
+- **Per roll** — one timeline per camera roll.
+- **Per day** — one timeline per shoot day, all rolls combined.
+
+Synced audio tracks are included in the stringout using the sync pair offsets calculated during Cocreate's sync pass, so the timeline opens with production sound already aligned to picture.
+
+## Importing the .drp into DaVinci Resolve
+
+<Steps>
+  <Step title="Open DaVinci Resolve">
+    Launch DaVinci Resolve 19 and stay on the Project Manager screen, or close any open project to return to it.
+  </Step>
+  <Step title="Import the project">
+    In the Project Manager, right-click in the project grid and select **Import Project**, or use **File → Import Project** from the menu bar. Navigate to your exported `.drp` file and press **Open**.
+  </Step>
+  <Step title="Open the project">
+    Double-click the newly imported project tile. Resolve opens it with your full bin structure visible in the Media Pool.
+  </Step>
+  <Step title="Relink media if needed">
+    If Resolve cannot locate media automatically (for example, the media is on a different volume than the export machine), right-click the offline clips and choose **Relink Selected Clips**, then navigate to the media location. Resolve resolves all clips in the same folder in one pass.
+  </Step>
+</Steps>
+
+<Note>
+  Cocreate's `.drp` writer targets **DaVinci Resolve 19.0.1**. Projects import without issue into newer 19.x point releases. If your facility uses an earlier version of Resolve, use the XMEML or FCPXML export targets instead for maximum compatibility.
+</Note>
+
+## Resolve Export at a Glance
+
+| Feature | Supported |
+|---|---|
+| Nested bins (unlimited depth) | ✅ |
+| Clip colors (all 16 Cocreate labels) | ✅ |
+| Clip markers from transcription | ✅ |
+| Stringout timelines (per roll, per day) | ✅ |
+| Synced audio tracks in timelines | ✅ |
+| Scene / Take / Camera metadata | ✅ |
+| Offline — no Resolve required | ✅ |

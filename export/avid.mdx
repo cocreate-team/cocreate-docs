@@ -1,0 +1,93 @@
+---
+title: "Export Native Avid Bins and MXF Media from Cocreate"
+sidebarTitle: "Avid"
+description: "Generate real Avid .avb bin files with managed and AMA-linked clips, sync map sequences, auto sequences, and full metadata — no Avid app required."
+---
+
+Cocreate's Avid export is the deepest NLE integration in the application. Rather than generating an interchange format that Avid must interpret, Cocreate writes real `.avb` bin files using the same internal MasterMob/FileMob/TapeMob structures that Media Composer produces itself. The result is a complete, ready-to-open Avid project folder containing your managed transcode bins, AMA-linked bins, per-day sync map sequences, per-roll auto sequences, and fully populated metadata columns — built entirely offline, with no Avid application required on the export machine.
+
+<Steps>
+  <Step title="Open Organize & Export → Export Bins">
+    In your Cocreate project, select the **Organize & Export** tab and press **Export Bins** to open the Bin Structure Builder.
+  </Step>
+  <Step title="Load a preset">
+    Press the preset dropdown at the top of the screen. For a standard dailies handoff, select **Sync Map / Auto Seq**. Cocreate loads the preset and populates the canvas with a `00 SYNC MAPS / 01 RUSHES / 98 AMA` bin tree, including per-day sync map bins and per-roll auto sequence elements. You can adjust any node before exporting.
+  </Step>
+  <Step title="Review and adjust the bin structure">
+    Examine the template bins for roll bins under `01 RUSHES`, AMA bins under `98 AMA`, and sync map bins under `00 SYNC MAPS`. Change the **Organize by** rule on any template bin — roll, day, scene, camera, or a custom tag — to match your production's convention. Add or remove dividers to match the folder layout your editor expects.
+  </Step>
+  <Step title="Configure metadata column mappings">
+    Select a clip element inside any bin and expand **Metadata Column Mapping** in the settings panel. Press **Add Mapping** to define how a Cocreate metadata field writes into an Avid column. Map your roll tag to **Disk Label** so each clip carries the roll name Avid uses for Relink, and set a literal value (for example, `12.205`) to **TapeID** if your facility convention requires it. Repeat this step for every clip element in the structure that needs metadata — typically the video and audio elements under both the managed and AMA branches.
+  </Step>
+  <Step title="Set the export destination and Avid MediaFiles path">
+    In the export settings panel, set the **Destination** to the folder where Cocreate should write the Avid project directory. If you generated OP-Atom MXF proxies during offload, confirm that the **Avid MediaFiles** path points to the correct `Avid MediaFiles/MXF/<n>` folder on your edit volume. Cocreate uses this path so the managed clips in the bins point to the right location when Avid opens the project.
+  </Step>
+  <Step title="Click Export">
+    Press **Export**. Cocreate expands all template bins across your media, writes each `.avb` bin file, resolves MasterMob/FileMob links for managed clips, and builds AMA references for the original camera files. A progress indicator tracks each stage; the export log captures a full debug snapshot for troubleshooting.
+  </Step>
+  <Step title="Open the exported project in Media Composer">
+    In Avid Media Composer, press **File → Open Project** and navigate to the exported project folder. Your bins open with clips already linked: managed clips resolve from the `Avid MediaFiles/MXF/` path on the edit volume, and AMA clips link directly to the original camera files on the source drive. Disk Label, TapeID, and any other mapped columns are populated on every clip.
+  </Step>
+</Steps>
+
+## Bin Organize-By Options
+
+Template bins expand at export time based on the **Organize by** rule you assign. The available rules are:
+
+| Organize by | Creates one bin per… |
+|---|---|
+| **Roll** | Camera roll tag |
+| **Day** | Shoot day number |
+| **Date** | Calendar date |
+| **Scene** | Scene value |
+| **Camera** | Camera letter or identifier |
+| **Custom tag** | Any custom metadata field in your project |
+
+Bins are named using the `{@Field}` token syntax — for example, `{@Roll}` becomes `A001` — and you can prefix or suffix the token with static text (`RUSHES_{@Roll}`) to match your facility's naming convention.
+
+## Stringout Types
+
+Cocreate supports two Avid stringout types, each written as a native Avid sequence inside its bin.
+
+**Auto Sequence (per roll)** arranges all clips from a single roll in source timecode order, butt-cut with no gaps. This gives editors a quick linear view of every take on a roll without any manual assembly.
+
+**Sync Map (per day)** stacks camera and sound clips by timecode across a multi-track timeline. Video tracks carry each camera angle; audio tracks carry the corresponding sound rolls. Clips are placed at their source timecode position so any TC overlap is immediately visible — structurally identical to a manually assembled sync map. Gaps between clips are filled with filler to maintain the timecode grid.
+
+Select which stringout type to include by adding a **Stringout** element inside the appropriate template bin in the Bin Structure Builder.
+
+## Managed vs AMA Bins
+
+Cocreate generates two parallel sets of bins for most Avid workflows.
+
+**Managed bins** contain master clips that reference your OP-Atom MXF proxies on the edit volume. These are the clips your editor cuts with — they sit inside `Avid MediaFiles/MXF/` and are fully managed by Media Composer. For managed clips to come online automatically, the MXF files must be on the edit volume with the correct `Avid MediaFiles/MXF/<n>` structure. The folder number (`1`, `2`, etc.) must match the subfolder you wrote to during the offload transcode.
+
+**AMA bins** contain linked master clips that point directly to the original camera files on your source or nearline drive. These come online as long as that drive is mounted — no transcoding required. AMA bins give editors access to the full-quality source material alongside the offline proxies.
+
+<Note>
+  For managed clips to link automatically when Avid opens the project, the `Avid MediaFiles` directory must be at the root of the mounted edit volume. A path such as `/Volumes/EDIT_01/Avid MediaFiles/MXF/1` is correct; a nested path will cause clips to appear offline until you manually relink.
+</Note>
+
+## Metadata Column Mapping
+
+Metadata column mapping controls how Cocreate fields write into Avid's bin columns. Open any clip element's settings, expand **Metadata Column Mapping**, and press **Add Mapping**. Each mapping has two parts:
+
+- **Source**: a Cocreate field — Roll tag, Scene, Take, Camera, a custom field, or a **Literal** value (fixed text you type in).
+- **Target**: an Avid column name — Disk Label, TapeID, Camroll, Soundroll, ASC SOP, ASC SAT, LUT, or any other standard Avid metadata column.
+
+A typical facility setup maps **Roll tag → Disk Label** (so Avid's Relink recognizes each clip by roll) and **Literal `12.205` → TapeID** (a fixed reference value used across all clips). You can add as many mappings as your post workflow requires.
+
+## Bin Appearance Customization
+
+Each bin in the exported project can carry custom background and foreground colors, visible in Media Composer's bin list. Select a bin in the builder and open **Bin Appearance** to set the color. Use colors to signal bin purpose at a glance — for example, teal for sync map bins and orange for AMA bins.
+
+You can also set the **pre-sort column** for each bin so clips open in the sort order your editor prefers (by name, timecode, Disk Label, etc.).
+
+## Avid MediaFiles Folder Structure
+
+When you transcode proxies during offload in Card Manager, Cocreate writes OP-Atom MXF files into:
+
+```
+<edit volume>/Avid MediaFiles/MXF/<n>/
+```
+
+The `<n>` folder number is set in Card Manager's encoding settings. At export time, specify the same path in the export settings so Cocreate generates the correct internal MXF references inside the `.avb` bins. Media Composer scans all numbered subfolders under `Avid MediaFiles/MXF/` on mount, so all clips from any subfolder number link automatically.

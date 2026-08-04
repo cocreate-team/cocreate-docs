@@ -1,0 +1,72 @@
+---
+title: "Export Adobe Premiere Pro Project Files from Cocreate"
+sidebarTitle: "Premiere Pro"
+description: "Generate .prproj files for Premiere Pro 2025 or 2026 with multicam sequences, stringout timelines, proxy attachment, and dialogue markers."
+---
+
+Cocreate writes native Adobe Premiere Pro `.prproj` files offline using a purpose-built project writer that covers the full Premiere data model — from deeply nested bin hierarchies to multicam sequences, proxy attachments, and clip markers. The export targets Premiere Pro 2025 and 2026 and produces a double-clickable project file that editors can open directly in either version without any import or conversion step. Nothing about the process requires a running copy of Premiere on the export machine.
+
+## Supported Premiere Versions
+
+Select your target version from the **Version** dropdown in the export settings panel before exporting:
+
+- **Premiere Pro 2025** — compatible with the 2025 release track.
+- **Premiere Pro 2026** — targets the 2026 format; use this for teams on the latest builds.
+
+Cocreate writes the correct internal version markers for whichever target you choose, so the project opens cleanly without format-upgrade prompts.
+
+## Building the Bin Hierarchy
+
+The Bin Structure Builder supports **unlimited nesting depth** for Premiere exports. Drag static bins, template bins, and elements into any configuration — three levels, six levels, or whatever mirrors your production's folder convention. Template bins expand dynamically at export time: set one to **Organize by Roll** and Cocreate creates one bin per camera roll, named using the roll tag. Set another to **Organize by Day** inside a parent bin to produce a day → roll hierarchy in a single pass.
+
+Bin names support the `{@Field}` token syntax so you can build names like `DAY {@Day} — {@Date}` or `{@Camera} - {@Roll}` to match any naming convention.
+
+## Multicam Sequences
+
+When your project contains synced camera pairs or multicam groups, Cocreate generates **multicam sequences** automatically. Each sequence stacks the camera angles on separate video tracks, aligned by source timecode, ready for Premiere's multicam editing tools. Add a **Multicam Clip** element inside a template bin in the Bin Structure Builder to include multicam sequences in your export.
+
+Cocreate resolves sync pair offsets at export time so each angle in the stacked sequence is frame-accurate. Audio tracks carry the production sound from the corresponding sync pair.
+
+## Stringout Timelines
+
+**Stringout** elements produce linear timelines — butt-cut clip-by-clip sequences arranged in source timecode order. Add a Stringout element inside any template bin and set its scope:
+
+- **Per roll** — one timeline per camera roll, clips ordered by source TC.
+- **Per scene** — one timeline per scene grouping.
+- **Per day** — one timeline per shoot day, all clips from that day in order.
+
+Stringout timelines include correct sequence settings (frame rate, resolution, audio sample rate) derived from the source media, so they open at the right spec without manual adjustment in Premiere.
+
+## Append Mode
+
+**Append mode** lets you add exported bins and sequences to an **existing** Premiere project rather than creating a new one. This is the right choice when an editor is already cutting and you need to deliver a new day's rushes into their open project.
+
+To use append mode, enable the **Append to existing project** toggle in the export settings, then press **Choose Project** and select the `.prproj` file you want to update. Cocreate reads the existing project structure, avoids duplicate bin names, and writes only the new content — leaving all existing sequences, edits, and settings untouched.
+
+## Proxy Attachment
+
+If you transcoded proxies during offload in Card Manager, Cocreate can attach them directly in the `.prproj` using Premiere's native proxy system. Enable **Attach Proxies** in the export settings and confirm the proxy file path. When the editor opens the project, Premiere recognizes the proxies immediately — no manual relink or Ingest Settings step required. Toggling between original and proxy media in Premiere's Program Monitor works exactly as it would if the proxies had been attached within Premiere itself.
+
+## Dialogue Markers
+
+If Cocreate transcribed your clips, the transcript timing exports as **clip markers** and **sequence markers** in the `.prproj`. Each marker carries the transcript segment text and its start/end timecode so editors can search dialogue, navigate to specific lines, and use the markers as a reference during the cut.
+
+Dialogue markers appear in Premiere's Markers panel and on the timeline ruler. Enable **Export Dialogue Markers** in the export settings to include them; leave it off for clean timelines when markers aren't needed.
+
+## Metadata Column Mapping for Premiere
+
+Open any clip element in the Bin Structure Builder and expand **Metadata Column Mapping** to control how Cocreate fields populate Premiere's clip metadata properties. Map Roll tag, Scene, Take, Camera, and any custom field to the corresponding Premiere column — for example:
+
+- **Roll tag → Label** (drives Premiere's color-label system)
+- **Scene → Scene** (populates the Scene column in Premiere's Project panel)
+- **Camera → Camera Angle** (used by Premiere's multicam tools)
+
+The 16-color label system in Cocreate maps directly to Premiere's 16 label colors, so clips appear in the correct color in the Project panel and on the timeline without any additional configuration.
+
+## Opening the Exported Project in Premiere Pro
+
+Double-click the exported `.prproj` file in Finder or use **File → Open Project** in Premiere Pro. If your media is online at the expected paths, all clips link immediately. If you need to relink, use Premiere's **Link Media** dialog — the exported project preserves original file paths so the relink process is deterministic.
+
+<Tip>
+  If you're handing the project to an editor on a different machine, confirm that the media paths in the `.prproj` match the paths where media will live on their system before exporting. Use Cocreate's clip-naming templates to produce predictable, path-stable filenames.
+</Tip>

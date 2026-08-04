@@ -1,0 +1,86 @@
+---
+title: "Browse and Edit Metadata in the Cocreate Media Browser"
+sidebarTitle: "Media Browser"
+description: "Navigate clips across four views in Cocreate. Edit slate metadata in bulk, filter by roll or scene, apply color labels, and search your media."
+---
+
+Once your media has been imported and analyzed, the Media tab is where you spend most of your time — verifying slate reads, correcting metadata, grouping footage for export, and reviewing sync results. Cocreate gives you four distinct ways to look at the same pool of clips, each suited to a different task: a spreadsheet for data-intensive editing, a thumbnail grid anchored by slate images, a scene-and-take hierarchy for script-oriented review, and a timeline map for evaluating sync coverage. All four views share a single source of truth, so an edit you make in one view is immediately visible in the others.
+
+## Switching Between Views
+
+Use the keyboard shortcuts **⌘1** through **⌘4** to jump between views instantly, or click the view icons in the Media toolbar.
+
+| Shortcut | View | Best for |
+|---|---|---|
+| **⌘1** | List View | Bulk metadata editing, sorting, and find & replace |
+| **⌘2** | Slate View | Visually verifying slate images and correcting individual fields |
+| **⌘3** | Scene View | Navigating by day → scene → take; marking circle takes |
+| **⌘4** | Sync Map View | Inspecting audio/video sync alignment across the timeline |
+
+### List View — the FileViewer Spreadsheet
+
+List View renders your clips as a virtualized spreadsheet (the **FileViewer**) that handles thousands of rows without slowing down. Every metadata column is editable inline, and the table supports the kind of power-editing you would expect from a professional spreadsheet application:
+
+- **Inline cell editing:** Click any cell and type to edit. Press **Tab** to advance to the next column or **Return** to move down a row.
+- **Autofill drag:** Select a cell and drag the fill handle downward to propagate a value (or a pattern Cocreate detects, such as incrementing take numbers) to the rows below. A preview tooltip shows what each cell will receive before you release.
+- **Fill range:** Select a block of cells across multiple rows and columns and apply a single value to all of them at once.
+- **Undo / edit history:** Every change is tracked. Press **⌘Z** to undo individual edits and step back through the history of changes made in this session.
+- **Find & replace:** Press **⌘F** to open a find-and-replace panel that searches across all editable fields. Apply replacements to all matches or step through them one at a time.
+- **Column management:** Drag column headers to reorder them, drag edges to resize, and use the column picker to show or hide fields. Your layout persists per-project.
+
+<Tip>
+  To batch-correct slate metadata across a group of clips — for example, fixing
+  a wrong scene number on an entire roll — select all the affected rows by
+  clicking the first, Shift-clicking the last, or using **⌘A** to select all,
+  then edit any cell in the target column. Cocreate applies the new value to all
+  selected rows simultaneously.
+</Tip>
+
+The FileViewer context menu (right-click any row) provides additional per-clip actions: view the full slate image, apply or clear Cocreate's correction suggestions, reset a field to the AI's original read, rescan the slate, resync the clip, reveal the file in Finder, copy the filename or path, and set a custom thumbnail.
+
+### Slate View
+
+Slate View displays each clip as a thumbnail card anchored by its detected slate image. The scene, take, roll, and camera fields appear directly on the card and are editable in place. Click the thumbnail to open a full-resolution **Slate Viewer** modal that shows the original slate frame alongside the extracted values, making it easy to compare the AI read against the physical slate.
+
+### Scene View
+
+Scene View groups your clips into a three-level hierarchy: **Days** → **Scenes** → **Takes**. Use the day grid at the top to jump between shoot days, then browse scenes and their individual takes below. Click the circle-take toggle on any clip to mark it as a preferred take — an indicator that carries through to export presets that use circle-take filtering.
+
+### Sync Map View
+
+Sync Map View renders your clips as a timeline across horizontal tracks, positioned by source timecode. Camera rolls and audio rolls appear on separate tracks, and sync pairs are drawn as connected brackets so you can immediately see which audio is matched to which camera. Use the zoom controls and minimap to navigate long shooting days. A gap-collapse threshold control lets you hide long timecode gaps so the tracks stay readable. Metadata grouping overlays add labels for roll, scene, or camera directly on the timeline.
+
+## Filtering and Grouping
+
+The filter bar above the clip list lets you narrow what the current view shows:
+
+- **Type filters:** Limit the view to video, audio, or still-image assets using the type selector buttons.
+- **Attribute filters:** Click **Add Filter** to build a condition — choose a metadata field (Roll, Scene, Camera, Sync Status, Day, Tag, and more), select an operator (is, is not, contains, starts with, greater than, etc.), and enter a value. Add multiple filters to narrow results further; all conditions must match.
+- **Duplicates only:** Show only clips that share a filename with another asset in the project.
+- **Group by:** Reorganize the list into collapsible groups by Shoot Day, Batch, Scene, or Camera without changing the sort order within groups.
+
+## Search
+
+Type in the search field to filter clips by any text that appears in their metadata. Search is debounced (results update 150 ms after you stop typing) and activates after two or more characters. Matches are highlighted inline and a count badge shows how many clips match. For transcript content, click the **Dialogue Search** button in the toolbar — results jump directly into the transcript panel of the player for the matching clip rather than filtering the list.
+
+## Color Labels
+
+Cocreate provides a **16-color palette** for annotating clips and bins, matching the color label set used in Premiere Pro so that colors carry through to NLE exports.
+
+To apply a color label manually:
+
+1. Select one or more clips in any view.
+2. Right-click and choose **Color Label**, or click the color swatch in the clip detail panel.
+3. Pick a color from the palette.
+
+For larger shoots, use **Rule-Based Coloring** to apply colors automatically based on metadata criteria. Open **Project → Color Settings** to define rules such as "all audio rolls → blue" or "scene 42 → yellow." Rules evaluate in order and the first matching rule wins.
+
+## Tags and Custom Metadata Columns
+
+**Tags** are project-level labels you can attach to any clip or group of clips. Each tag has a name and one of 16 palette colors. Assign tags by dragging a tag chip onto clips in the Media tab, or by selecting clips and clicking **Assign Tag** in the toolbar. Tags are searchable, filterable, and available as organizing dimensions in export bin templates.
+
+**Custom fields** let you add your own metadata columns beyond Cocreate's built-in slate fields. Go to **Project → Custom Fields** to define a new column — give it a name, a data type (text, number, date, or dropdown), and optionally a default value. Custom fields appear in the FileViewer alongside built-in columns, are editable with the same bulk-edit and autofill tools, and can be used as filter criteria, organize-drive tags, and export bin organizers.
+
+## Playback
+
+Click any clip in any view to open it in the embedded player. The player supports professional formats natively — ProRes, MXF (DNxHD/DNxHR), H.264/265, and more — without requiring proxies. Use **J/K/L** for shuttle transport, including reverse playback, and **←/→** for frame-by-frame stepping. Pop the player into a dedicated window for a second monitor by clicking **Detach Player** in the player toolbar.
