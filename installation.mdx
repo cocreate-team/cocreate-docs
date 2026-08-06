@@ -4,7 +4,9 @@ sidebarTitle: "Installation"
 description: "Install Cocreate on macOS (Apple Silicon) or Windows (x64). Covers system requirements, platform download links, Gatekeeper, and first-launch setup."
 ---
 
-Cocreate is a self-contained desktop application — it bundles its own FFmpeg binaries, Python 3.12 runtime, AI models (including the YOLO clapperboard detector and the CoreML Parakeet ASR model for airgapped transcription), and all native media-engine libraries. You do not need to install Python, FFmpeg, or any NLE application before or after installing Cocreate. Download the installer for your platform, run it once, and Cocreate is ready to use.
+Cocreate is a self-contained desktop application — it bundles its own FFmpeg binaries, Python 3.12 runtime, the YOLO clapperboard detector, and all native media-engine libraries. You do not need to install Python, FFmpeg, or any NLE application before or after installing Cocreate. Download the installer for your platform, run it once, and Cocreate is ready to use.
+
+The Parakeet on-device transcription model is not bundled with the installer. Cocreate downloads it into a per-user runtime cache the first time you enable on-device transcription. See [On-device transcription](/analysis/transcription) for details.
 
 ## System requirements
 
@@ -110,7 +112,7 @@ Download the latest version of Cocreate from [cocreate.so](https://cocreate.so).
     3. Launch Cocreate from your application menu or by running `cocreate` in a terminal.
 
     <Note>
-      Local AI transcription (Parakeet CoreML) is a macOS-only feature. On Linux, airgapped mode disables transcription and falls back to YOLO-only slate detection. Cloud transcription via Deepgram works normally when an internet connection is available.
+      On-device transcription with Parakeet is available on macOS (Sonoma 14+, Core ML on the Apple Neural Engine) and Windows 10/11 x64 (ONNX runtime on CPU). It is not available on Linux — airgapped mode on Linux disables transcription and falls back to YOLO-only slate detection. Cloud transcription via Deepgram works normally on all platforms when an internet connection is available.
     </Note>
   </Tab>
 </Tabs>
@@ -124,7 +126,7 @@ Cocreate is a self-contained bundle. The following components are included — y
 | FFmpeg + ffprobe | Media analysis, transcoding, and clip export |
 | Python 3.12 runtime | Backend analysis and export engine |
 | YOLO clapperboard model (ONNX) | Local slate detection |
-| Parakeet TDT ASR (CoreML) | Local/airgapped transcription (macOS only) |
+| Parakeet TDT 0.6B v3 ASR | Local/airgapped transcription (macOS via Core ML, Windows via ONNX) — downloaded on first use, not bundled with the installer |
 | raw2bmx, Tesseract, libvips | MXF handling, OCR, and image processing |
 | Local project database | Stores all project data, analysis results, and settings on your machine |
 
