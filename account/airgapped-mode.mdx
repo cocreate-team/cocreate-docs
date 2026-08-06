@@ -39,7 +39,7 @@ The full dailies pipeline remains operational offline:
 |---------|-------------------|
 | **Card Manager (ingest and offload)** | Fully available — transfers, checksums, receipts, ingest log, expected-roll validation |
 | **Slate detection** | Uses the bundled YOLO clapperboard model locally via ONNXRuntime — no GPT-4o Vision call |
-| **On-device transcription** | Parakeet TDT 0.6B v3 (CoreML) runs on the Apple Neural Engine — produces the same word-level timestamps as cloud transcription |
+| **On-device transcription** | Parakeet TDT 0.6B v3 runs locally: Core ML on the Apple Neural Engine on macOS 14+, or ONNX on CPU on Windows 10/11 x64. Produces the same word-level timestamps as cloud transcription. Requires a one-time model download; see below. |
 | **Audio/video sync** | Timecode sync and waveform fingerprint sync both work fully offline |
 | **Playback and review** | Native hardware decode, J/K/L shuttle, multicam viewer, LUT overlay — all local |
 | **NLE export** | Avid `.avb`, Premiere `.prproj`, Resolve `.drp`, XMEML — all generated offline |
@@ -65,7 +65,13 @@ GPT-4o Vision provides the highest slate-reading accuracy on difficult boards (l
 
 ## On-Device Transcription with Parakeet
 
-When airgapped mode is on, Cocreate automatically routes all transcription jobs to **Parakeet TDT 0.6B v3** — a speech-recognition model bundled with the app and converted to CoreML. Parakeet runs on the Apple Neural Engine, which means it does not compete with the CPU cores handling media decode and analysis. It produces Deepgram-compatible JSON output with per-word timestamps and confidence scores, so every downstream feature that consumes transcripts — dialogue search, transcript panel, dialogue markers in NLE exports — works identically whether the transcript came from Deepgram or Parakeet.
+When airgapped mode is on, Cocreate automatically routes all transcription jobs to **Parakeet TDT 0.6B v3**, a speech-recognition model that runs locally on your workstation. On macOS 14 Sonoma or later, Cocreate uses the Core ML build on the Apple Neural Engine, which does not compete with the CPU cores handling media decode and analysis. On Windows 10 or 11 x64, Cocreate uses an ONNX build on CPU via `onnx-asr`. Parakeet produces Deepgram-compatible JSON output with per-word timestamps and confidence scores, so every downstream feature that consumes transcripts — dialogue search, transcript panel, dialogue markers in NLE exports — works identically whether the transcript came from Deepgram or Parakeet.
+
+<Warning>
+The Parakeet model is not bundled with the installer. The first time you enable on-device transcription, Cocreate downloads the platform-specific model into a per-user runtime cache and verifies each file's SHA-256 checksum. Complete this download **before going onto a secure set** — if the cache is empty when you first enable airgapped mode, the download dialog will prompt you and cannot complete without a network connection. Once downloaded, the model persists across sessions and works fully offline.
+</Warning>
+
+On-device transcription is unavailable on macOS 12 and 13, and on Linux. In airgapped mode on those platforms, transcription is skipped and the rest of the analysis pipeline runs normally.
 
 ## Usage Buffering
 

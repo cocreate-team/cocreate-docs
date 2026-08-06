@@ -32,16 +32,29 @@ Cocreate transcribes every clip's dialogue as part of the standard analysis run,
   <Tab title="On-Device / Airgapped">
     ### On-device transcription
 
-    For shoots on secure sets, remote locations without connectivity, or facilities with strict network policies, Cocreate bundles a fully local speech recognition model that runs entirely on the **Apple Neural Engine**.
+    For shoots on secure sets, remote locations without connectivity, or facilities with strict network policies, Cocreate ships a fully local speech recognition model — NVIDIA **Parakeet TDT 0.6B v3** — that runs entirely on your workstation.
 
-    On-device transcription requires no internet connection and produces no outbound network traffic. The model runs directly on your Mac's Neural Engine, delivering fast inference even on long audio rolls.
+    On-device transcription requires no internet connection at analysis time and produces no outbound network traffic. It uses a platform-specific runtime:
+
+    | Platform | Runtime | Notes |
+    |---|---|---|
+    | macOS 14 Sonoma or later, Apple Silicon | Core ML via FluidAudio on the Apple Neural Engine | Does not compete with the CPU cores handling media decode and analysis |
+    | Windows 10 or 11, x64 | ONNX (`onnx-asr`) on CPU | No GPU required |
+
+    On macOS 12 and 13, and on Linux, on-device transcription is not available; use cloud transcription instead.
 
     Key characteristics:
 
-    - **No network required** — runs fully offline; no data leaves your machine
+    - **No network required at analysis time** — no audio leaves your machine
     - **Compatible output** — produces the same per-word timestamp and confidence format as the cloud path, so all downstream features (Dialogue panel, marker export, slate extraction from transcript) work identically
     - **Comparable accuracy** — suitable for production use on clearly recorded production sound
     - **Automatic activation** — when Cocreate detects airgapped mode (no network), on-device transcription activates automatically; no manual switching required
+
+    #### First-time model download
+
+    The Parakeet model is not bundled with the Cocreate installer. The first time you enable on-device transcription (either directly, or by switching on airgapped mode), Cocreate opens a **Download Local Transcription Engine** dialog showing the download size and progress. Cocreate downloads the model into a per-user runtime cache, verifies each file's SHA-256 checksum, and keeps it there for all future sessions.
+
+    Because the download happens on demand, plan to enable on-device transcription and complete the download **while you still have an internet connection**, before going onto a secure set. Once downloaded, the model works fully offline.
 
     #### Enabling airgapped mode
 

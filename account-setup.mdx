@@ -90,7 +90,7 @@ If you work on an air-gapped network or a set with no internet access, Cocreate 
 - Your session is restored from an encrypted local cache — no network authentication required.
 - Cloud AI services (Deepgram transcription, GPT-4o slate reads) are disabled.
 - Slate detection falls back to the bundled YOLO model only.
-- On macOS, local transcription uses the bundled Parakeet CoreML model on the Apple Neural Engine.
+- On macOS 14+ and Windows 10/11 x64, local transcription uses the Parakeet TDT 0.6B v3 model (Core ML on the Apple Neural Engine on macOS, ONNX on CPU on Windows). The model is downloaded on first use.
 - Usage is buffered locally and reconciled with the server when connectivity is restored.
 - Billing and subscription UI are hidden.
 
