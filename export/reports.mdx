@@ -4,7 +4,7 @@ sidebarTitle: "Reports"
 description: "Produce PDF, CSV, HTML, and MHL reports from Cocreate — roll reports, media reports, contact sheets, and checksum receipts for facilities and clients."
 ---
 
-Every production generates paperwork: ingest logs, sync-QC records, codec summaries, and delivery receipts. Cocreate produces all of these automatically from the data it captures during offload, analysis, and sync — no manual spreadsheet entry required. Reports export as PDF, CSV, or HTML depending on the type, and most are available from **File → Export Reports** in the menu bar or from the Card Manager's **Reports** tab. The sections below cover each report type, what it contains, and where to find it.
+Every production generates paperwork: ingest logs, sync-QC records, codec summaries, and delivery receipts. Cocreate produces all of these automatically from the data it captures during offload, analysis, and sync. No manual spreadsheet entry required. Reports export as PDF, CSV, or HTML depending on the type, and most are available from **File → Export Reports** in the menu bar or from Card Manager's **Transfer Reports** dialog. The sections below cover each report type, what it contains, and where to find it.
 
 ## Roll Report (CSV)
 
@@ -60,7 +60,42 @@ Export the Project Report from **File → Export Reports**. Select PDF or CSV un
 
 The Contact Sheet generates a visual reference document with clip thumbnails and metadata. Each page of the contact sheet displays a grid of frame grabs alongside clip name, scene, take, camera, roll, and timecode. It is the standard deliverable for DIT-to-colorist or DIT-to-VFX handoffs where a visual clip inventory is required.
 
-Contact sheets are available in both **HTML** (self-contained, offline-browsable) and **PDF** formats. Export from the **Card Manager → Reports** tab or from **File → Export Reports** in a project, depending on whether you need a per-transfer or per-project version. Use the date range, scene, and camera filters to scope the sheet to a single shoot day or camera before exporting.
+Contact sheets are available in both **HTML** (self-contained, offline-browsable) and **PDF** formats. Generate a per-transfer contact sheet from Card Manager's **Transfer Reports** dialog (see below), or export a per-project version from **File → Export Reports**. Use the date range, scene, and camera filters to scope the sheet to a single shoot day or camera before exporting.
+
+## Transfer Reports (Card Manager)
+
+Card Manager includes a dedicated **Transfer Reports** dialog for generating reports scoped to a specific transfer job. Open it from the file icon in the Transfer Queue toolbar. Select a transfer in the queue first — the dialog uses that job's destination folder as the default output location and scopes report data to the assets moved by that transfer.
+
+The dialog exposes the following report types:
+
+| Report type | Description |
+|---|---|
+| **Shooting Day** | Daily production report with all clips organized by day |
+| **Clips** | Detailed list of all clips with metadata and timecodes |
+| **Thumbnails** | Visual thumbnail sheet of all captured media |
+| **Contact Sheet** | Compact grid view with thumbnails and key information |
+| **Volume** | Storage analysis and volume usage breakdown |
+| **Folder Structure** | Interactive, navigable treeview snapshot of a folder |
+
+Every type except Folder Structure supports both **HTML** and **PDF** output. Folder Structure is HTML-only.
+
+### Common options
+
+- **Generate MHL (Media Hash List)** — writes an MHL file alongside the report for standard-form checksum receipts.
+- **Preview after generation** — opens the HTML report in your default browser once it finishes writing. Available for HTML output.
+- **Upload to dashboard** — pushes the generated report (and MHL, if present) to the Cocreate dashboard for the selected organization. Only appears when you are signed in to at least one dashboard organization; when multiple organizations are available, pick which one receives the upload.
+- **Output Folder** — defaults to `_reports/` inside the transfer's destination folder. Use **Browse** to change it.
+
+### Folder Structure report
+
+The Folder Structure report replaces the standalone HTML snapshot workflow. It produces a self-contained, browsable HTML tree of a directory — the production receipt for a source drive or a nearline copy — with file counts, sizes, and folder hierarchy. It opens in any browser with no internet connection required.
+
+Two Folder Structure–specific controls appear when this report type is selected:
+
+- **Scan Target** — choose **Drive** to snapshot the transfer's source paths, or **Copy** to snapshot the transfer's destination folder.
+- **Include hidden files** — when enabled, dotfiles and other hidden entries are included in the tree.
+
+Each Folder Structure scan is recorded as a **drive_scan** or **copy_scan** event in the transfer's Ingest Log, so the snapshot is traceable back to the roll and operator that produced it.
 
 ## Card Manager Receipts
 
@@ -76,7 +111,7 @@ Alongside the TXT log, Cocreate writes a machine-readable JSON file containing p
 
 ### HTML directory snapshots
 
-Use **Export HTML Snapshot** in Card Manager's toolbar to generate a self-contained offline HTML file — a searchable, browsable tree of any directory with file counts, sizes, and folder hierarchy. This is the production receipt for the source drive and the nearline copy, replacing a manual Snap2HTML pass. The snapshot opens in any browser with no internet connection required.
+Generate a browsable HTML tree of a source drive or nearline copy from the **Folder Structure** report in the [Transfer Reports](#transfer-reports-card-manager) dialog. Pick **Drive** or **Copy** as the scan target to point the snapshot at the transfer's source paths or destination folder.
 
 ### MHL (Media Hash List) files
 
@@ -89,8 +124,9 @@ Enable **Generate MHL** in Verification Settings before starting a transfer to p
 | Roll Report CSV | **File → Export Reports** → Type: Roll → Format: CSV |
 | Media Report CSV | **File → Export Reports** → Type: Media Report → Format: CSV |
 | Project Report PDF/CSV | **File → Export Reports** → Type: Project Report |
-| Contact Sheet HTML/PDF | **File → Export Reports** or **Card Manager → Reports** |
+| Contact Sheet HTML/PDF | **File → Export Reports** or **Card Manager → Transfer Reports** |
+| Shooting Day, Clips, Thumbnails, Volume | **Card Manager → Transfer Reports** (select a transfer first) |
+| Folder Structure HTML | **Card Manager → Transfer Reports** → Type: Folder Structure |
 | Per-transfer TXT logs | **Card Manager** → completed job card → **Reports & Receipts** |
 | JSON checksum manifests | Written automatically to the transfer destination |
-| HTML directory snapshots | **Card Manager** → toolbar → **Export HTML Snapshot** |
-| MHL files | Enable in **Card Manager → Verification Settings** before transfer |
+| MHL files | Enable **Generate MHL** in **Card Manager → Transfer Reports** or in Verification Settings before transfer |
