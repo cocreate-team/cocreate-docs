@@ -76,7 +76,8 @@
             "group": "Collaboration",
             "pages": [
               "collaboration/dashboard",
-              "collaboration/publishing"
+              "collaboration/publishing",
+              "collaboration/facility-administration"
             ]
           },
           {
