@@ -1,0 +1,89 @@
+---
+title: "Administer a Multi-Station Cocreate Facility"
+sidebarTitle: "Facility administration"
+description: "Enroll new stations and publish shared storage roots for a multi-station Cocreate workspace from Settings, Facility."
+---
+
+A Cocreate facility connects several editing stations to one shared workspace so they see the same projects, the same shared storage, and the same ingest state. Each station pairs with a coordinator once, then holds its own copy of the workspace configuration for its operator. Facility administration is the subset of that surface reserved for the person who onboards new stations and decides which storage volumes the workspace can see. This page covers what an administrator can do from **Settings → Facility** and when to use each control.
+
+## Facility roles
+
+Every paired station has one of two roles:
+
+- **Operator** — the default. An operator can join projects, run ingests, and map the storage roots that already exist in the workspace to the paths this station mounts locally. Operators do not see the **Facility administration** card.
+- **Facility admin** — additionally sees the **Facility administration** card in **Settings → Facility** and can enroll new stations and publish new shared storage roots for the workspace.
+
+Roles are assigned per station when a pairing code is generated. A station keeps the role it was paired with; to change it, generate a new code with the desired role and re-pair the station.
+
+<Note>
+  The **Facility administration** card only appears when you sign in with the Cocreate account that imported the original administrator enrollment for this workspace. Signing in with a different account on the same station hides the card, even if the station itself is paired as a facility admin.
+</Note>
+
+## Enroll a new station
+
+Use this flow whenever a new Mac or Windows machine needs to join the workspace. Each pairing code enrolls exactly one station and is single-use.
+
+<Steps>
+  <Step title="Open Settings → Facility">
+    On a station already paired as a facility admin, open **Settings** and select **Facility**. Scroll to the **Facility administration** card.
+  </Step>
+
+  <Step title="Generate a pairing code">
+    Under **Generate a station pairing code**, fill in:
+
+    - **Station name** — how the new machine will appear in the workspace, for example `Avid 12`.
+    - **Access** — choose **Operator** for editors and assistants, or **Facility admin** for someone who will also enroll stations and publish storage. Only grant Facility admin to people who manage enrollment and storage.
+    - **Expires** — how long the code stays valid: **1 hour**, **24 hours**, or **48 hours**. Shorter is safer; pick the shortest window that fits how you plan to deliver the code.
+
+    Select **Generate code**. Cocreate shows a one-time code and its expiry timestamp.
+  </Step>
+
+  <Step title="Deliver the code to the new station">
+    Select **Copy** and send the code through your facility's approved secure channel. Anyone who receives the code before it expires can pair a station with the role you selected, so treat it like a temporary password.
+
+    On the new station, the operator enters the code under **Settings → Facility** on the setup screen and completes the pairing.
+  </Step>
+</Steps>
+
+### Air-gapped enrollment
+
+On an air-gapped deployment — a facility whose stations cannot reach the internet — the setup screen on the new station cannot fetch the enrollment payload from the coordinator. In that case, after generating the pairing code, select **Save enrollment…** next to the code. Cocreate writes the enrollment bundle to a file you choose. Copy that file to the new station on approved media and use **Choose enrollment…** on the setup screen to import it.
+
+The **Save enrollment…** button only appears on air-gapped workspaces. On hosted workspaces the setup screen pulls what it needs from the coordinator using the pairing code alone.
+
+## Publish a shared storage root
+
+A shared storage root is a canonical location — nearline, NEXIS, EditShare, an artifacts volume — that every station in the workspace agrees on by name. Once a root is published, each station can point Cocreate at whatever local mount reaches that volume from its machine, and jobs that reference the root resolve to the right path everywhere.
+
+Add a root when a new shared volume comes online for the facility. You only need to do this once per workspace; other stations will see the root appear under **Shared storage** and map it locally.
+
+<Steps>
+  <Step title="Mount the volume on this station">
+    Publishing writes a small identity marker to the folder you select, so the volume has to be mounted and writable on the station you are administering from.
+  </Step>
+
+  <Step title="Fill in the storage details">
+    In the **Facility administration** card, under **Add shared storage**, enter:
+
+    - **Display name** — how the root appears in the UI, for example `Nearline 07`.
+    - **Canonical key** — the workspace-wide identifier other stations will see, for example `nearline-07`. Lowercase letters, digits, and hyphens only; must start with a letter and be between two and eighty characters.
+    - **Purpose** — one of:
+      - **Nearline / source media** — camera originals and audio rolls.
+      - **NEXIS / EditShare** — a shared edit volume.
+      - **Reports / artifacts** — reports, receipts, and other generated outputs.
+      - **Other** — anything that doesn't fit the categories above.
+    - **Mounted folder** — select the folder on this station that points at the volume.
+  </Step>
+
+  <Step title="Publish the root">
+    Select **Add shared storage**. Cocreate writes a hidden identity marker into the folder and publishes the root to the workspace. The root now shows up under **Shared storage** on every paired station, where each operator can map their own local path to it.
+  </Step>
+</Steps>
+
+<Warning>
+  The canonical key is permanent. Choose a name that will still make sense after a volume swap or facility rename — a naming scheme like `nearline-07` or `editshare-post-01` ages better than one tied to a specific project or client.
+</Warning>
+
+## Related
+
+- [Publishing to the Dashboard](/collaboration/dashboard) — share the facility's ingest state with clients and remote teams.
