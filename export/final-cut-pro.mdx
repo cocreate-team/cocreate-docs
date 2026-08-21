@@ -27,11 +27,21 @@ Cocreate writes Apple Final Cut Pro `.fcpxml` files offline. The output is a sin
   </Step>
 </Steps>
 
-## Events and keyword collections
+## Events, keyword collections, and smart collections
 
-Every top-level bin in your structure becomes a Final Cut Pro **event**. Nested bins become **keyword collections** on the clips they contain, so a `RUSHES → Day 1 → A001` structure produces one `RUSHES` event with `Day 1` and `A001` keywords assigned to the clips inside it.
+Final Cut Pro Libraries hold flat Events, so nested bins can't be preserved as-is. Cocreate flattens one level on export:
+
+- Every **top-level bin** becomes a Final Cut Pro **Event**.
+- Every **nested bin** inside it becomes a **Keyword Collection**, and its clips carry that keyword. A `RUSHES → Day 1 → A001` structure produces a `RUSHES` Event with `Day 1` and `A001` keyword collections on the clips inside.
+- A nested bin that contains **only stringouts** becomes a **Smart Collection** instead, because Final Cut Pro projects can't carry keywords.
 
 Template bins expand at export time — set a template bin to organize by roll, day, scene, or camera and Cocreate creates one keyword collection per unique value found in the media.
+
+The Bin Structure Builder's preview panel switches to this Final Cut Pro vocabulary — Event, Keyword Collection, Smart Collection — when Final Cut Pro is selected, so what you see is what the imported FCPXML looks like.
+
+<Note>
+  The first time you export a nested bin structure to Final Cut Pro, Cocreate shows a **Nested bins become keywords in Final Cut** dialog with a preview of the mapping. Press **Export anyway** to continue, **Cancel** to adjust the structure, or **Don't show again** to suppress the dialog for that project.
+</Note>
 
 ## Supported element types
 
