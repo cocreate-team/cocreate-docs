@@ -1,0 +1,102 @@
+---
+title: "Export Final Cut Pro Projects (FCPXML) from Cocreate"
+sidebarTitle: "Final Cut Pro"
+description: "Generate .fcpxml files for Apple Final Cut Pro with nested events, multicam clips, synced clips, and stringout sequences — no Final Cut Pro required to export."
+---
+
+<Note>
+  Final Cut Pro export is in **beta**. Structure and metadata are stable; report anything that doesn't round-trip cleanly into Final Cut Pro.
+</Note>
+
+Cocreate writes Apple Final Cut Pro `.fcpxml` files offline. The output is a single FCPXML 1.11 document that Final Cut Pro imports as a library of events, keeping the Bin Structure Builder's hierarchy, multicam clips, synced clips, and stringout sequences intact. The export machine does not need Final Cut Pro installed.
+
+## Choose Final Cut Pro as the export target
+
+<Steps>
+  <Step title="Open Organize & Export">
+    Navigate to your project and select the **Organize & Export** tab, then press **Export Bins**.
+  </Step>
+  <Step title="Select Final Cut Pro">
+    Press the NLE selector at the top of the export panel and choose **Final Cut Pro**. The Bin Structure Builder switches to Final Cut Pro mode and hides settings that don't apply to FCPXML.
+  </Step>
+  <Step title="Build your bin structure">
+    Drag static bins, template bins, and elements onto the canvas exactly as you would for any other target. Cocreate maps the tree to Final Cut Pro's events and keyword collections at export time.
+  </Step>
+  <Step title="Set the output folder and press Export">
+    Cocreate writes a single `.fcpxml` file into the chosen destination.
+  </Step>
+</Steps>
+
+## Events and keyword collections
+
+Every top-level bin in your structure becomes a Final Cut Pro **event**. Nested bins become **keyword collections** on the clips they contain, so a `RUSHES → Day 1 → A001` structure produces one `RUSHES` event with `Day 1` and `A001` keywords assigned to the clips inside it.
+
+Template bins expand at export time — set a template bin to organize by roll, day, scene, or camera and Cocreate creates one keyword collection per unique value found in the media.
+
+## Supported element types
+
+Place any of these elements inside a bin to include them in the FCPXML output:
+
+- **Video** — master clips with source timecode, frame rate, and resolution.
+- **Audio** — production sound clips.
+- **Synced Clips** — video with its synced audio combined into a Final Cut Pro synchronized clip, using the sync offsets calculated during Cocreate's sync pass.
+- **Multicam Clips** — camera angles stacked into a Final Cut Pro multicam clip, aligned by source timecode.
+- **Stringout** — a linear spine sequence containing the scoped clips in order.
+
+## Multicam clips
+
+When your project contains sync pairs or multicam groups, add a **Multicam Clips** element to a template bin. Cocreate writes each group as a Final Cut Pro multicam clip with one angle per camera, aligned to source timecode. Audio angles carry the corresponding production sound. Open a multicam clip in Final Cut Pro's Angle Editor to cut between angles the same way you would with a multicam created inside Final Cut Pro.
+
+## Stringout sequences
+
+A **Stringout** element produces a spine sequence in the FCPXML — clips placed end-to-end in source-timecode order. Configure the scope on the element:
+
+- **Per roll** — one sequence per camera roll.
+- **Per day** — one sequence per shoot day, all rolls combined.
+- **Per scene** — one sequence per scene grouping.
+
+If a stringout scope contains synced clips, the sequence includes the synced audio on the corresponding lanes so production sound opens aligned to picture. Final Cut Pro's magnetic timeline closes gaps automatically, so the **Space Clips by** and **Trim handles to overlap** settings that appear for other NLEs are hidden when Final Cut Pro is selected.
+
+## Supported frame rates
+
+Cocreate serializes clips at the nearest supported Final Cut Pro rate. Assets recorded at other rates conform to the closest match.
+
+| Frame rate | Format |
+|---|---|
+| 23.976 | NDF |
+| 24 | NDF |
+| 25 | NDF |
+| 29.97 | DF |
+| 30 | NDF |
+| 50 | NDF |
+| 59.94 | DF |
+| 60 | NDF |
+
+## Importing the FCPXML into Final Cut Pro
+
+<Steps>
+  <Step title="Open Final Cut Pro">
+    Launch Final Cut Pro and either create a new library or open the library you want the events imported into.
+  </Step>
+  <Step title="Import the FCPXML">
+    Select **File → Import → XML**, navigate to your exported `.fcpxml` file, and press **Import**.
+  </Step>
+  <Step title="Confirm the import destination">
+    Final Cut Pro shows a summary of the events, keyword collections, and clips it's about to create. Confirm the target library and press **Import**.
+  </Step>
+  <Step title="Relink media if needed">
+    If Final Cut Pro can't locate media automatically, select the offline clips in the browser, choose **File → Relink Files**, and point Final Cut Pro at the media folder. Final Cut Pro resolves matching clips in one pass.
+  </Step>
+</Steps>
+
+## Final Cut Pro export at a glance
+
+| Feature | Supported |
+|---|---|
+| Events from top-level bins | ✅ |
+| Keyword collections from nested bins | ✅ |
+| Synced clips (video + production audio) | ✅ |
+| Multicam clips (aligned by timecode) | ✅ |
+| Stringout spine sequences | ✅ |
+| Source timecode preserved | ✅ |
+| Offline — no Final Cut Pro required | ✅ |

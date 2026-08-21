@@ -69,6 +69,7 @@
               "export/avid",
               "export/premiere",
               "export/resolve",
+              "export/final-cut-pro",
               "export/reports"
             ]
           },
