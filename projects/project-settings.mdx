@@ -1,0 +1,69 @@
+---
+title: "Configure Per-Project Settings in Cocreate"
+sidebarTitle: "Project Settings"
+description: "Set slate workflow, US or UK slate numbering, production info, sync, transcription, airgapped processing, and managed media for each Cocreate project."
+---
+
+Every Cocreate project carries its own settings, saved with the project itself. A slated drama pilot, an unslated documentary shoot, and a locked-down airgapped job can all live in the same library with different processing behavior — and because settings are stored in the project's `.ccrt` file, they travel with the project when you hand it to another operator. Project settings override the app-level defaults configured in **Settings** for the project they belong to.
+
+## Opening Project Settings
+
+With a project open, choose **File → Project Settings...** from the menu bar. The dialog is organized into three sections: **General**, **Project Info**, and **Process**.
+
+Click **Save** to apply your changes. If you close the dialog with unsaved changes, Cocreate asks you to confirm before discarding them.
+
+## General
+
+The General section controls how the project treats slates and numbering.
+
+| Setting | Options | What it does |
+|---|---|---|
+| **Slate workflow** | Slated / Unslated | **Slated** runs slate detection and shows slate columns in the media views. **Unslated** skips slate detection entirely and hides the slate columns — use it for documentary, event, or drone-heavy shoots without clapperboards. |
+| **Slate numbering** | US: Roll / Scene / Take, UK: Scene / Slate / Take | Chooses the slate numbering convention for the project. See [US and UK Slate Numbering](/analysis/slate-detection#us-and-uk-slate-numbering) for what changes in each style. Disabled when the slate workflow is Unslated. |
+| **Scene numbering** | Auto / Episodic / Numeric | Controls how scene identifiers are interpreted and sorted — episodic formats like `204A` versus plain numeric scenes. |
+
+New projects default to the **Slated** workflow. The initial slate numbering style comes from the app-level **Default slate ordering** setting (**Settings → Analyze**), which itself defaults to US or UK based on your system locale.
+
+## Project Info
+
+Project Info holds production metadata for the project: display name, production title, production company, season, episode, unit, operator, director, camera operator, and free-form notes. The operator field is pre-filled from the operator initials in your app-level General settings.
+
+## Process
+
+The Process section sets the analysis behavior for media imported into this project.
+
+| Setting | Options | Default |
+|---|---|---|
+| **Sync clips** | On / Off | On |
+| **Sync strategy** | Timecode + Waveform / Timecode only / Waveform only | Timecode + Waveform |
+| **Minimum TC overlap** | Seconds | 2 seconds |
+| **Read slates** | On / Off | On (disabled when the slate workflow is Unslated) |
+| **Transcription** | Smart / All clips / Skip | Smart |
+| **Airgapped mode** | On / Off | Off |
+| **Transcription engine** | Cloud / Local | Cloud |
+| **Slate reader** | Cloud / Local | Cloud |
+| **Corrections** | Cloud / Local | Cloud |
+| **Managed media** | On / Off | Off |
+
+### Per-Project Airgapped Mode
+
+Turning on **Airgapped mode** in the Process section forces every analysis pass for this project to run offline: the transcription, slate reader, and corrections engines all switch to **Local** and cannot be set back to Cloud while the toggle is on. Use it when a single production requires offline processing but you still want the rest of the app online. The app-level airgapped mode described in [Airgapped Mode](/account/airgapped-mode) continues to apply to every project regardless of this toggle.
+
+### Engine Selection
+
+When airgapped mode is off, you can mix cloud and local engines per project — for example, cloud transcription with a local slate reader. The **Local** option for transcription and slate reading is only selectable on machines where the on-device models are supported.
+
+### Managed Media
+
+Turn on **Managed media** and choose a **Managed destination** folder to have Cocreate store its managed transcodes for this project in the folder you select. Click **Clear** next to the destination to remove the folder selection.
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Slate Detection" icon="camera" href="/analysis/slate-detection">
+    How slate reading works, and what US and UK numbering change in the media views
+  </Card>
+  <Card title="Airgapped Mode" icon="lock" href="/account/airgapped-mode">
+    App-wide offline operation for secure sets and restricted facilities
+  </Card>
+</CardGroup>

@@ -24,6 +24,38 @@ Cocreate reads the following fields from every detected clapperboard:
 
 Every extracted field receives an individual **confidence score** from 0.0 to 1.0. Scores below roughly 0.7 are highlighted in the FileViewer and Slate View so you can identify fields that need a quick review before export.
 
+In projects using UK slate numbering, Cocreate also extracts a separate **Slate** field. See [US and UK Slate Numbering](#us-and-uk-slate-numbering) below.
+
+## US and UK Slate Numbering
+
+Productions number their boards in one of two conventions, and Cocreate supports both per project:
+
+| Style | Fields on the board | Notes |
+|---|---|---|
+| **US: Roll / Scene / Take** | Roll, Scene, Take | The scene identifier doubles as the slate identifier. This is the default style. |
+| **UK: Scene / Slate / Take** | Scene, Slate, Take | The slate number is a separate, continuously incrementing field distinct from the scene. |
+
+Set the style for a project in **File → Project Settings... → General → Slate numbering**. In UK projects:
+
+- A dedicated **Slate** column appears in List View and on Slate View cards, alongside Scene and Take. US projects hide the Slate column.
+- The slate reader parses the board's split scene/slate layout and writes the scene and slate values to their own fields.
+- **Slate** is available as a grouping and organizing dimension in export bin structures.
+
+New projects inherit the app-level **Default slate ordering** setting (**Settings → Analyze**), which defaults to US or UK based on your system locale.
+
+### Automatic Style Detection
+
+Cocreate checks each slate read against the project's configured numbering style. If a read confidently indicates the other convention — for example, UK-style numbering in a project set to US — a one-time **Switch Slate Numbering?** dialog appears, naming the clip and summarizing the evidence. Choose:
+
+- **Switch to UK** (or **Switch to US**) — Cocreate updates the project's slate numbering style and layout to the detected convention.
+- **Keep Current** — the project keeps its configured style.
+
+Either choice is remembered, and the prompt does not appear again for that project. You can still change the style at any time in Project Settings.
+
+## Unslated Projects
+
+For shoots without clapperboards — documentary, event, or drone work — set **File → Project Settings... → General → Slate workflow** to **Unslated**. Cocreate skips slate detection during analysis and hides the slate columns from the media views, so unslated projects aren't cluttered with empty Scene and Take fields.
+
 ## How slate detection works
 
 Cocreate uses a multi-strategy pipeline — running extraction methods in order of reliability, falling back to the next strategy only when the previous one doesn't produce a high-confidence result.
