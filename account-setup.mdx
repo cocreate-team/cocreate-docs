@@ -17,7 +17,7 @@ Cocreate supports two sign-in methods. Both create the same type of account; the
 3. Check your inbox for a verification email from Cocreate and click the confirmation link.
 4. Return to Cocreate — you are signed in and your 14-day Pro trial begins automatically.
 
-To reset a forgotten password, click **Forgot password** on the sign-in screen. Cocreate sends a reset link to your registered email address.
+To reset a forgotten password, click **Forgot password** on the sign-in screen. Cocreate sends a reset link to your registered email address. If you are already signed in, you can also press **Send Password Reset Email** in the **Account** card of the Account & Billing view.
 
 ### Google OAuth
 
@@ -74,13 +74,34 @@ You can update your operator initials at any time. Changes apply to all new tran
 
 To sign out of Cocreate:
 
-1. Open **Settings → Account**.
-2. Click **Sign out**.
+1. Open the **Account & Billing** view from the sidebar.
+2. Click **Sign Out** in the **Account** card.
 
 Cocreate clears your session and returns to the sign-in screen. Your project files (`.ccrt`) remain on disk and are not deleted when you sign out. When you sign back in — or sign in with a different account — you can reopen projects from the Home screen normally.
 
 <Note>
   If you share a machine with another operator, each person should sign in with their own account so that receipts and ingest log entries carry the correct operator attribution.
+</Note>
+
+## Deleting your account
+
+You can permanently delete your Cocreate account from inside the app. Deletion removes your cloud identity and account-linked data, and cancels any active subscription.
+
+1. Open the **Account & Billing** view from the sidebar.
+2. In the **Account** card, click **Delete Account**.
+3. Cocreate shows a confirmation dialog. Click **Continue to Account Deletion** to open a secure confirmation page in your browser.
+4. On the confirmation page, type your account email to confirm. The confirmation link expires after 30 minutes; if it expires, start again from the app.
+
+When deletion completes, your browser hands control back to Cocreate. The app signs you out and confirms that your account was deleted.
+
+<Warning>
+  Account deletion is permanent. Your cloud identity and account-linked data are removed, and any active subscription is cancelled immediately.
+</Warning>
+
+Local files are not affected. Projects, media, exports, and any other files on your machine stay in place after deletion.
+
+<Note>
+  Account deletion and password reset emails require an internet connection. Turn off [airgapped mode](/account/airgapped-mode) before using either action.
 </Note>
 
 ## Airgapped mode
