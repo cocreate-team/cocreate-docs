@@ -76,6 +76,19 @@ Metadata column mapping controls how Cocreate fields write into Avid's bin colum
 
 A typical facility setup maps **Roll tag → Disk Label** (so Avid's Relink recognizes each clip by roll) and **Literal `12.205` → TapeID** (a fixed reference value used across all clips). You can add as many mappings as your post workflow requires.
 
+## Audio Track Names
+
+Cocreate carries the audio channel labels recorded on set — for example `Mix L`, `Boom`, or `Lav 1` — into the exported Avid bins automatically. No mapping setup is required.
+
+Labels are read from the source audio metadata, in order of preference:
+
+1. Track name tags embedded in the audio streams.
+2. Broadcast WAV `TRK` entries written by the sound recorder into the file's comment metadata.
+3. The original source file's metadata, when the exported clip is a transcode of that source.
+4. Channel labels encoded in the file name (for example `_a1_Boom`).
+
+Cocreate writes each resolved label onto the clip's audio tracks and into the **TRK1**, **TRK2**, and subsequent **TRK** bin columns in Media Composer, so editors see the sound mixer's channel names instead of unlabeled tracks. This applies to managed audio clips and to linked WAV clips alike. Labels longer than 63 characters are truncated to fit Avid's name limit. Generic container handler names are not used as labels.
+
 ## Bin Appearance Customization
 
 Each bin in the exported project can carry custom background and foreground colors, visible in Media Composer's bin list. Select a bin in the builder and open **Bin Appearance** to set the color. Use colors to signal bin purpose at a glance — for example, teal for sync map bins and orange for AMA bins.
