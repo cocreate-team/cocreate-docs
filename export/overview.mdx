@@ -17,6 +17,16 @@ The Bin Structure Builder is a drag-and-drop canvas where you construct the exac
 - **Elements** are the clips or sequences placed inside bins: video clips, audio clips, multicam group clips, and stringout (sequence) elements.
 - **Dividers** add visual section breaks inside a bin — useful when you need `00 SYNC MAPS / 01 RUSHES / 98 AMA` naming conventions.
 
+### Copying and Pasting Bins
+
+The builder supports standard clipboard shortcuts for rearranging or duplicating parts of your structure:
+
+- **⌘C** copies the selected bins and elements. With nothing selected, it copies the entire structure. **⌘X** cuts (copies, then removes) the selection, and **⌘V** pastes.
+- **⌘A** selects every node in the structure; **⇧⌘A** deselects everything.
+- Copying a collapsed bin includes everything inside it. Copying an expanded bin copies the bin itself, plus any of its contents you also selected.
+
+Paste placement follows the state of the selected node: pasting onto an **expanded** bin places the copied nodes inside it, pasting onto a **collapsed** bin or an element places them as siblings directly after it, and pasting with nothing selected adds them at the root of the structure. Bins are copied in a Cocreate-specific clipboard format, so copying bins does not interfere with text you copy and paste elsewhere.
+
 ## Opening Organize & Export
 
 Navigate to your project and select the **Organize & Export** tab in the top navigation. Press **Export Bins** to open the Bin Structure Builder alongside the export settings panel.
