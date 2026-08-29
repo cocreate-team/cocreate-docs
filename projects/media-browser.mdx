@@ -38,6 +38,15 @@ List View renders your clips as an editable spreadsheet that handles thousands o
 
 The List View context menu (right-click any row) provides additional per-clip actions: view the full slate image, apply or clear Cocreate's correction suggestions, reset a field to the AI's original read, rescan the slate, resync the clip, reveal the file in Finder, copy the filename or path, and set a custom thumbnail.
 
+#### Folders, Day Bins, and Cam Bins
+
+List View rows can be organized into folders. **Day bins** and **cam bins** are typed folders that group clips by shoot day or by camera. Two rules apply when structuring them:
+
+- A day bin cannot be nested inside another day bin, and a cam bin cannot be nested inside another cam bin. Cocreate blocks the create, move, or paste and shows a message such as `Day bins cannot be nested inside day bins.`
+- Folders cannot be moved into themselves.
+
+To duplicate a structure, select one or more folders and press **⌘C**, then **⌘V**. Copy and paste reproduces the folder and bin structure only — the media assets inside a copied folder are never duplicated. Copying a collapsed folder includes its entire subfolder tree; copying an expanded folder copies the folder itself, plus any subfolders you also selected. Pasting onto an **expanded** folder places the copied structure inside it, while pasting onto a **collapsed** folder places it as a sibling directly after it.
+
 ### Slate View
 
 Slate View displays each clip as a thumbnail card anchored by its detected slate image. The scene, take, roll, and camera fields appear directly on the card and are editable in place. Click the thumbnail to open a full-resolution **Slate Viewer** modal that shows the original slate frame alongside the extracted values, making it easy to compare the AI read against the physical slate.
