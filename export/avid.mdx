@@ -80,12 +80,15 @@ A typical facility setup maps **Roll tag → Disk Label** (so Avid's Relink reco
 
 Cocreate carries the audio channel labels recorded on set — for example `Mix L`, `Boom`, or `Lav 1` — into the exported Avid bins automatically. No mapping setup is required.
 
-Labels are read from the source audio metadata, in order of preference:
+Cocreate captures channel labels when media is ingested and stores them with each asset. Labels are read in order of preference:
 
 1. Track name tags embedded in the audio streams.
 2. Broadcast WAV `TRK` entries written by the sound recorder into the file's comment metadata.
 3. The original source file's metadata, when the exported clip is a transcode of that source.
-4. Channel labels encoded in the file name (for example `_a1_Boom`).
+4. Track names from a sound report sidecar found alongside the audio files, when the files themselves carry no labels.
+5. Channel labels encoded in the file name (for example `_a1_Boom`).
+
+Labels embedded in the media files always take priority over sound report sidecar labels.
 
 Cocreate writes each resolved label onto the clip's audio tracks and into the **TRK1**, **TRK2**, and subsequent **TRK** bin columns in Media Composer, so editors see the sound mixer's channel names instead of unlabeled tracks. This applies to managed audio clips and to linked WAV clips alike. Labels longer than 63 characters are truncated to fit Avid's name limit. Generic container handler names are not used as labels.
 
