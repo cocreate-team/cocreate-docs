@@ -55,6 +55,20 @@ Cocreate supports two Avid stringout types, each written as a native Avid sequen
 
 Select which stringout type to include by adding a **Stringout** element inside the appropriate template bin in the Bin Structure Builder.
 
+## Dialogue and Comment Markers
+
+Cocreate writes transcript dialogue and media player comments into the exported bins as native Avid markers. Marker export is controlled per element in the Bin Structure Builder: select a video, audio, multicam, or stringout element and use the **Add Dialogue Markers** and **Add Comment Markers** switches in the **Markers** section of its settings panel.
+
+- **Dialogue markers** carry the transcript segment text at its source timecode, so editors can scan and search dialogue directly in Media Composer.
+- **Comment markers** carry each timecode-anchored comment from the Cocreate media player at the commented frame.
+
+Both switches default to **on** for video, audio, and multicam elements and **off** for stringout elements. Markers on video and audio elements are written on the clips themselves; markers on multicam and stringout elements are written on the exported sequence, so they appear on the timeline when the editor loads it.
+
+Press the gear icon next to either switch to fine-tune its markers:
+
+- **Dialogue marker settings** — select the marker color (Cyan by default) and check **Separate markers by sentence** to split markers at sentence-ending punctuation instead of natural speech pauses.
+- **Comment marker settings** — leave **Use set colors** checked to keep the color assigned to each comment in the media player, or check **Override color** and pick a single color for every comment marker (Blue by default).
+
 ## Managed vs AMA Bins
 
 Cocreate generates two parallel sets of bins for most Avid workflows.

@@ -47,11 +47,21 @@ To use append mode, enable the **Append to existing project** toggle in the expo
 
 If you transcoded proxies during offload in Card Manager, Cocreate can attach them directly in the `.prproj` using Premiere's native proxy system. Enable **Attach Proxies** in the export settings and confirm the proxy file path. When the editor opens the project, Premiere recognizes the proxies immediately — no manual relink or Ingest Settings step required. Toggling between original and proxy media in Premiere's Program Monitor works exactly as it would if the proxies had been attached within Premiere itself.
 
-## Dialogue Markers
+## Dialogue and Comment Markers
 
-If Cocreate transcribed your clips, the transcript timing exports as **clip markers** and **sequence markers** in the `.prproj`. Each marker carries the transcript segment text and its start/end timecode so editors can search dialogue, navigate to specific lines, and use the markers as a reference during the cut.
+Marker export is controlled per element in the Bin Structure Builder. Select a video, audio, multicam, or stringout element and use the two switches in the **Markers** section of its settings panel:
 
-Dialogue markers appear in Premiere's Markers panel and on the timeline ruler. Enable **Export Dialogue Markers** in the export settings to include them; leave it off for clean timelines when markers aren't needed.
+- **Add Dialogue Markers** — if Cocreate transcribed your clips, the transcript timing exports as markers. Each marker carries the transcript segment text and its start/end timecode so editors can search dialogue, navigate to specific lines, and use the markers as a reference during the cut.
+- **Add Comment Markers** — timecode-anchored comments from the Cocreate media player export as markers at the commented frames.
+
+Both switches default to **on** for video, audio, and multicam elements and **off** for stringout elements, so stringout timelines stay clean unless you opt in.
+
+Markers land where editors expect them for each element type. Video and audio clips carry clip markers visible in Premiere's Markers panel. Multicam sequences carry markers on the sequence itself, with each comment marker prefixed by its camera name. Stringout elements write markers directly on the stringout timeline, so they appear on the timeline ruler.
+
+Press the gear icon next to either switch to fine-tune its markers:
+
+- **Dialogue marker settings** — select the marker color (Cyan by default) and check **Separate markers by sentence** to split markers at sentence-ending punctuation instead of natural speech pauses.
+- **Comment marker settings** — leave **Use set colors** checked to keep the color assigned to each comment in the media player, or check **Override color** and pick a single color for every comment marker (Blue by default).
 
 ## Metadata Column Mapping for Premiere
 
